@@ -1,0 +1,15 @@
+{
+  "name":         "Docio",
+  "version":      "0.1",
+  "description":  "Documentation generator for Eerie packages.",
+  "author":       "Ales Tsurko",
+  "website":      "https://github.com/AlesTsurko/docio",
+  "readme":       "README",
+  "protos":       [],
+  "dependencies": {
+    "libs":     [],
+    "headers":  [],
+    "protos":   ["Yajl"],
+    "packages": []
+  }
+}
