@@ -4,12 +4,8 @@
   "description":  "Documentation generator for Eerie packages.",
   "author":       "Ales Tsurko",
   "website":      "https://github.com/AlesTsurko/docio",
-  "readme":       "README",
-  "protos":       [],
+  "readme":       "README.md",
   "dependencies": {
-    "libs":     [],
-    "headers":  [],
-    "protos":   ["Yajl"],
-    "packages": []
+    "protos":   ["Yajl"]
   }
 }
