@@ -5,6 +5,8 @@ if(System args size != 2,
   return 
 )
 
+Eerie
+
 Directory setCurrentWorkingDirectory(System launchPath)
 sourcesPath := System args at(1)
 docsPath := sourcesPath .. "/docs"
