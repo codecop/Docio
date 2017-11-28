@@ -28,7 +28,7 @@ if(packageName == nil,
 
 System system("io ./DocsExtractor.io " .. sourcesPath)
 // copy template
-System system("cp -a #{docioPackage path} #{docsPath}" interpolate)
+System system("cp -a #{docioPackage path}/template/. #{docsPath}" interpolate)
 
 prototypes := Map clone
 modules := Map clone
