@@ -8,6 +8,7 @@ if(System args size != 2,
 Directory setCurrentWorkingDirectory(System launchPath)
 sourcesPath := System args at(1)
 docsPath := sourcesPath .. "/docs"
+docioPackage := Eerie envs at(0) packageNamed("Docio")
 
 packageJson := File with(sourcesPath .. "/package.json") open
 packageJson exists ifFalse(
@@ -27,7 +28,7 @@ if(packageName == nil,
 
 System system("io ./DocsExtractor.io " .. sourcesPath)
 // copy template
-System system("cp -a ../template/. " .. docsPath)
+System system("cp -a #{docioPackage path} #{docsPath}" interpolate)
 
 prototypes := Map clone
 modules := Map clone
