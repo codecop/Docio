@@ -62,18 +62,14 @@ DocsExtractor := Object clone do(
 
 	cFiles := method(
 		if(folder directoryNamed("source") exists,
-			folder directoryNamed("source") files select(file,
-				file name beginsWithSeq("Io") and(
-				file name containsSeq("Init") not) and(
-				file name pathExtension == "c" or file name pathExtension == "m")
-			)
+			folder directoryNamed("source") recursiveFilesOfTypes(list("c", "m"))
 		,
 			list()
 		)
 	)
 	
 	ioFiles := method(
-		if(folder directoryNamed("io") exists, folder directoryNamed("io") filesWithExtension("io"), list())
+		if(folder directoryNamed("io") exists, folder directoryNamed("io") recursiveFilesOfTypes(list("io")), list())
 	)
 )
 
