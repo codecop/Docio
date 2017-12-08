@@ -1,182 +1,153 @@
 #!/usr/local/bin/io
 
-if(System args size != 2,
-  "Usage:\n\tdocio sources" println
-  return 
-)
-
 Eerie
 
 Directory setCurrentWorkingDirectory(System launchPath)
-sourcesPath := System args at(1)
+
+showUsage := method(
+  "Docio — documentation generator for Eerie packages.\nUsage:\n\tdocio package=package_dir [template=path_to_template]" println
+)
+
+expandUserPath := method(inputPath,
+    inputPath ?asMutable ?replaceFirstSeq("~/", User homeDirectory path .. "/")
+)
+
+if(System args size < 2,
+    showUsage()
+    System exit() 
+)
+
+options := System getOptions(System args)
+
+// help option
+if(options hasKey("help"), showUsage(); return)
+
+// package path argument
+sourcesPath := expandUserPath(options at("package")) 
+if(sourcesPath == nil,
+    showUsage()
+    return
+)
+
 docsPath := sourcesPath .. "/docs"
+
 docioPackage := Eerie envs at(0) packageNamed("Docio")
 
-packageJson := File with(sourcesPath .. "/package.json") open
-packageJson exists ifFalse(
-  packageJson close
-  "Error: package.json didn't found" println
-  return
+packageJson := File with(sourcesPath .. "/package.json")
+if(packageJson exists,
+    packageJson open,
+
+    "Error: package.json didn't found" println
+    return
 )
 
 // getting package name
-packageName := Yajl parseJson(packageJson contents) at("name")
-packageJson close
+packageName := Yajl parseJson(packageJson contents) at("name"); packageJson close
 
 if(packageName == nil,
   "Error: Please provide the name of the package in the package.json" println
   return
 )
 
-System system("io ./DocsExtractor.io " .. sourcesPath)
-// copy template
-System system("cp -a #{docioPackage path}/template/. #{docsPath}" interpolate)
+// Getting template
+templatePath := expandUserPath(options at("template"))
+if(templatePath == nil,
+    templatePath = docioPackage path .. "/template"
+)
 
-prototypes := Map clone
-modules := Map clone
+// extract raw docs
+System system("io ./DocsExtractor.io " .. sourcesPath)
+
+// copy template
+System system("cp -a #{templatePath}/. #{docsPath}" interpolate)
 
 
 File _write := File getSlot("write")
 File writeln := method(call evalArgs foreach(s, self _write(s)); self _write("\n"); self)
 
-readFolder := method(path,
-	file := File with(Path with(path, "/docs/docs.txt"))
-  file exists ifFalse(
-    "readFolder(#{path}/docs/docs.txt fails\n" interpolate println
-     return
-   )
+RawDocsParser := Object clone do(
+    prototypes := Map clone
+    modules := Map clone
+    categories := Map clone
 
-  file contents split("------\n") foreach(e,
-		isSlot := e beginsWithSeq("doc")
-		h := e beforeSeq("\n") afterSeq(" ") 
+    readFolder := method(path,
+        file := File with(Path with(path, "/docs/docs.txt"))
+        file exists ifFalse(
+            "readFolder(#{path}/docs/docs.txt) fails\n" interpolate println
+            return
+        )
 
-    if(h,
-      h = h asMutable strip asSymbol
-      protoName := h beforeSeq(" ") ?asMutable ?strip ?asSymbol
-      slotName := h afterSeq(" ") ?asMutable ?strip ?asSymbol
-      description := e afterSeq("\n")
-      p := prototypes atIfAbsentPut(protoName, Map clone atPut("slots", Map clone))
+        file contents split("------\n") foreach(docEntry,
+            isSlot := docEntry beginsWithSeq("doc")
+            header := docEntry beforeSeq("\n") afterSeq(" ") 
 
-      moduleName := path lastPathComponent
-      if(moduleName == "iovm", moduleName = "Core")
-      p atPut("module", moduleName)
-      m := modules atIfAbsentPut(moduleName, Map clone)
-      modules atPut(moduleName, m)
-      m atPut(protoName, p)
+            if(header,
+                header = header asMutable strip asSymbol
 
-      if(protoName == nil or slotName == nil, writeln("ERROR: " .. e))
+                protoName := header beforeSeq(" ") ?asMutable ?strip ?asSymbol
+                
+                slotName := header afterSeq(" ") ?asMutable ?strip ?asSymbol
 
-      if(isSlot, 
-        p at("slots") atPut(slotName, description)
-        ,
-        p atPut(slotName, description)
-      )
-      ,
+                description := docEntry afterSeq("\n")
+                
+                prots := prototypes atIfAbsentPut(protoName, Map clone atPut("slots", Map clone))
 
-      if(protoName == nil or slotName == nil, writeln("ERROR: " .. e))
+                moduleName := path lastPathComponent
+                if(moduleName == "iovm", moduleName = "Core")
+
+                prots atPut("module", moduleName)
+
+                mods := modules atIfAbsentPut(moduleName, Map clone)
+                modules atPut(moduleName, mods)
+                mods atPut(protoName, prots)
+
+                if(protoName == nil or slotName == nil, writeln("ERROR: " .. docEntry))
+
+                if(isSlot, 
+                    prots at("slots") atPut(slotName, description),
+                    // else
+                    prots atPut(slotName, description)
+                ),
+
+                // else
+                if(protoName == nil or slotName == nil, writeln("ERROR: " .. docEntry))
+            )
+        )
+
+        generateCategories()
     )
-	)
+
+    generateCategories := method(
+        modules foreach(moduleName, module,
+            firstProto := nil
+            firstProtoName := module keys sort detect(k, module at(k) at("category"))
+            
+            catNameMap := Map clone
+            module values select(at("category")) foreach(m, 
+                count := catNameMap at(m at("category")) 
+                if(count == nil, count = 0)
+                catNameMap atPut(m at("category"), count + 1)
+            )
+            
+            maxCount := 0
+            catName := nil
+            catNameMap foreach(name, count,
+                if(count > maxCount, catName = name; maxCount = count)
+            )
+            
+            // генерирует для кейса "Eerie Exception", если закомментить эту строку
+            // но появляются другие проблемы
+            module foreach(k, v, if(v at("category") != catName, module removeAt(k)))
+            
+            if(catName == nil, catName = "Misc")
+            cat := categories atIfAbsentPut(catName asMutable strip, Map clone)
+            cat atPut(moduleName, module)
+        )
+    )
 )
 
-readFolder(sourcesPath)
+RawDocsParser readFolder(sourcesPath)
 
-// ------------------------------
-
-/*
-ReferenceDoc := Object clone do(
-	modules :: = List clone
-	print := method(
-		modules foreach(printIndex)
-		modules foreach(print)
-	)
-)
-
-ModuleDoc := Object clone do(
-	refProtos :: = Map clone
-	path ::= nil
-	
-	refProtoNamed := method(name,
-		refProtos atIfAbsentPut(name, ProtoDoc clone setName(name))
-	)
-	
-	read := method(
-		File with(Path with(path, "/docs/docs.txt")) contents split("------\n") foreach(e,
-			isSlot := e beginsWithSeq("doc")
-			h := e beforeSeq("\n") afterSeq(" ") 
-			if(h,
-				h = h asMutable strip asSymbol
-				protoName := h beforeSeq(" ") ?asMutable ?strip ?asSymbol
-				slotName  := h afterSeq(" ") ?asMutable ?strip ?asSymbol
-				description := e afterSeq("\n")
-				
-				if(isSlot,
-					refProtoNamed(protoName) addSlot(slotName, description)
-				,
-					refProtoNamed(protoName) addMetaSlot(slotName, description)
-				)
-		)
-	)
-
-	print := method(
-		refProtos foreach(printIndex)
-		refProtos foreach(print)
-	)
-)
-
-ProtoDoc := Object clone do(
-	init := method(self slots := List clone)
-	printIndex := method(
-		nil
-	)
-	print := method(
-		printIndex
-		slots foreach(print)
-	)	
-)
-
-SlotDoc := Object clone do(
-	name ::= nil
-	value ::= nil
-	
-	printIndex := method(
-		nil
-	)
-	print := method(
-		nil
-	)
-)
-
-*/
-
-protoNames := prototypes keys sort
-moduleNames := modules keys sort 
-
-moduleNames remove("Core") prepend("Core")
-
-categories := Map clone
-modules foreach(moduleName, module,
-	firstProto := nil
-	firstProtoName := module keys sort detect(k, module at(k) at("category"))
-	
-	catNameMap := Map clone
-	module values select(at("category")) foreach(m, 
-		count := catNameMap at(m at("category")) 
-		if(count == nil, count = 0)
-		catNameMap atPut(m at("category"), count + 1)
-	)
-	
-	maxCount := 0
-	catName := nil
-	catNameMap foreach(name, count,
-		if(count > maxCount, catName = name; maxCount = count)
-	)
-	
-	module foreach(k, v, if(v at("category") != catName, module removeAt(k)))
-	
-	if(catName == nil, catName = "Misc")
-	cat := categories atIfAbsentPut(catName asMutable strip, Map clone)
-	cat atPut(moduleName, module)
-)
 
 Section := Object clone do(
 	items ::= nil
@@ -205,7 +176,7 @@ Section := Object clone do(
 	)
 )
 
-Categories := Section clone setItems(categories) 
+Categories := Section clone setItems(RawDocsParser categories) 
 
 if(Categories items size < 1,
   "No documentation comments found." println
@@ -338,7 +309,7 @@ Categories sortedItems foreach(cat,
 	
 	//writeln("protoName = ", protoName)
 	//p := prototypes at(protoName)
-	moduleName = p at("module")
+	moduleName := p at("module")
 	outFile := Directory with(Path with(docsPath, cat name, moduleName, protoName)) createIfAbsent fileNamed("index.html") remove open
 	
 	outFile writeln("""<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
