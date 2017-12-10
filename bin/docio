@@ -67,7 +67,8 @@ Docio := Object clone do(
         )
 
         // extract raw docs
-        System system("io ./DocsExtractor.io " .. sourcesPath)
+        System args = list("", sourcesPath)
+        doFile("DocsExtractor.io")
 
         // copy template
         System system("cp -a #{templatePath}/. #{outputPath}" interpolate)
@@ -110,32 +111,29 @@ Docio := Object clone do(
             )
         )
 
-        /* generateCategories() */
+        generateCategories()
     )
 
-    /* generateCategories := method( */
-        /* modules foreach(moduleName, module, */
-            /* firstProto := nil */
-            /* firstProtoName := module keys sort detect(k, module at(k) at("category")) */
-            /*  */
-            /* catNameMap := Map clone */
-            /* module values select(at("category")) foreach(m,  */
-                /* count := catNameMap at(m at("category"))  */
-                /* if(count == nil, count = 0) */
-                /* catNameMap atPut(m at("category"), count + 1) */
-            /* ) */
-            /*  */
-            /* maxCount := 0 */
-            /* catName := nil */
-            /* catNameMap foreach(name, count, */
-                /* if(count > maxCount, catName = name; maxCount = count) */
-            /* ) */
-            /*  */
-            /* if(catName == nil, catName = "Misc") */
-            /* cat := categories atIfAbsentPut(catName asMutable strip, Map clone) */
-            /* cat atPut(moduleName, module) */
-        /* ) */
-    /* ) */
+    generateCategories := method(
+        firstProto := nil
+        firstProtoName := prototypes keys sort detect(k, prototypes at(k) at("category"))
+
+        catNameMap := Map clone
+        prototypes values select(at("category")) foreach(m, 
+            count := catNameMap at(m at("category")) 
+            if(count == nil, count = 0)
+            catNameMap atPut(m at("category"), count + 1)
+        )
+
+        maxCount := 0
+        catName := nil
+        catNameMap foreach(name, count,
+            if(count > maxCount, catName = name; maxCount = count)
+        )
+
+        if(catName == nil, catName = "Misc")
+        categories atIfAbsentPut(catName asMutable strip, prototypes)
+    )
 )
 Docio clone := Docio
 

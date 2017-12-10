@@ -1,3 +1,4 @@
+#{Directory setCurrentWorkingDirectory(Directory with(Docio templatePath) path); ""}
 <!DOCTYPE html>
 
 <html lang="en">
@@ -5,13 +6,59 @@
         <meta charset="utf-8">
 
         <title>#{DocioPageGenerator currentPrototypeName} Prototype Reference</title>
-        <meta name="description" content="The HTML5 Herald">
+        <meta name="description" content="#{DocioPageGenerator currentPrototypeName} Reference">
         <meta name="author" content="#{User name}">
-        <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../uikit-3.0.0-beta.35/css/uikit.min.css" />
+        <link rel="stylesheet" href="../main.css" />
+        <script src="../uikit-3.0.0-beta.35/js/uikit.min.js"></script>
+        <script src="../uikit-3.0.0-beta.35/js/uikit-icons.min.js"></script>
+        #{doFile("prototype_page.io")}
     </head>
 
     <body>
-        <!-- <script src="js/scripts.js"></script> -->
-        #{DocioPageGenerator currentPrototype asJson}
+        <div class="uk-offcanvas-content">
+            <!-- menu button -->
+            <div style="position: fixed; top: 20px; left: 20px"> 
+                <a href="#contents-menu" class="uk-icon-button uk-margin-small-right" uk-icon="icon: list" uk-toggle></a>
+            </div>
+            <!-- menu -->
+            <div id="contents-menu" uk-offcanvas="mode: reveal">
+                <div class="uk-offcanvas-bar">
+                    <button class="uk-offcanvas-close" type="button" uk-close></button>
+                    <h3>#{DocioPageGenerator currentPrototypeName} Prototype</h3>
+                    <p>#{DocioPageGenerator currentPrototype at("description")}</p>
+                    <ul class="uk-nav uk-nav-default">
+                        #{PrototypePage globalNavigation}
+                    </ul>
+                </div>
+            </div>
+            <!-- page content -->
+            <div class="uk-section uk-section-primary">
+                <div class="uk-child-width-expand" uk-grid>
+                    <div>
+                        <article class="uk-article uk-container">
+                            <h1 class="uk-article-title">#{DocioPageGenerator currentPrototypeName} Prototype</h1>
+                            <p class="uk-text-lead">#{DocioPageGenerator currentPrototype at("description")}</p>
+                        </article>
+                    </div>
+                    <div>
+                        <div class="uk-container uk-column-1-2">
+                            <ul class="uk-nav uk-nav-default">
+                                #{PrototypePage slotsNavigation}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+            </div>
+            <div class="uk-section">
+                <div class="uk-container uk-container-small">
+                    #{PrototypePage slotsDocs}
+                </div>
+            </div>
+            <a href="#" uk-totop uk-scroll></a>
+        </div>
     </body>
 </html>
