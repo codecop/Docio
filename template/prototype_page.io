@@ -15,7 +15,7 @@ PrototypePage := Object clone do(
     generateSlotsDocs := method(
         slotsNamesSorted foreach(slotName,
             slotDescription := DocioPageGenerator currentPrototype at("slots") at(slotName)
-            slotsDocs appendSeq("<a class=\"uk-link-reset\" id=\"#{slotName}\"><h3 class=\"uk-heading-divider\">#{slotName}</h3></a>" interpolate)
+            slotsDocs appendSeq("<h3 class=\"uk-h3\" id=\"#{slotName}\"><a class=\"uk-link-reset\">#{slotName}</a></h3>" interpolate)
             slotsDocs appendSeq("<p>#{slotDescription}</p>" interpolate)
         )
     )
