@@ -20,11 +20,19 @@
         <div class="uk-offcanvas-content">
             <!-- menu buttons -->
             <div uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: 200">
-                <nav class="uk-navbar-container" uk-navbar="dropbar: true; dropbar-mode: push">
+                <nav class="uk-navbar-container" uk-navbar="dropbar: true; mode: click">
                     <div class="nav-overlay uk-navbar-left">
                         <ul class="uk-navbar-nav">
                             <li>
-                                <a href="#contents-menu" uk-icon="icon: list" uk-toggle></a>
+                                <a href="#" uk-icon="icon: triangle-down"></a>
+                                <div class="uk-navbar-dropdown uk-height-medium">
+                                    <ul class="uk-nav uk-navbar-dropdown-nav uk-flex uk-flex-column uk-flex-wrap uk-height-medium">
+                                        #{PrototypePage slotsNavigation}
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#contents-menu" uk-icon="icon: list" class="uk-navbar-toggle" uk-toggle="target: #contents-menu"></a>
                             </li>
                             <li>
                                 <a href="../index.html" uk-icon="icon: home"></a>
@@ -34,16 +42,6 @@
 
                     <div class="nav-overlay uk-navbar-right">
                         <a class="uk-navbar-toggle" uk-search-icon uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
-                        <ul class="uk-navbar-nav">
-                            <li>
-                                <a href="#" uk-icon="icon: triangle-down"></a>
-                                <div class="uk-navbar-dropdown">
-                                    <ul class="uk-nav uk-navbar-dropdown-nav">
-                                        #{PrototypePage slotsNavigation}
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                     <!-- hidden search field -->
                     <div class="nav-overlay uk-navbar-left uk-flex-1" hidden>
@@ -73,49 +71,26 @@
             <!-- page content -->
             <div class="uk-section">
                 <div class="uk-container uk-container-small">
-                    <div class="uk-child-width-expand" uk-grid>
-                        <div>
-                            <article class="uk-article">
-                                <h1 class="uk-article-title">#{DocioPageGenerator currentPrototypeName} Prototype</h1>
-                                <p class="uk-text-lead">#{DocioPageGenerator currentPrototype at("description")}</p>
-                                #{PrototypePage slotsDocs}
-                            </article>
-                        </div>
-                        <!-- <div> -->
-                            <!-- <div class="uk-container uk-column-1-2"> -->
-                                <!-- <ul class="uk-nav uk-nav-default"> -->
-                                    <!-- #{PrototypePage slotsNavigation} -->
-                                <!-- </ul> -->
-                            <!-- </div> -->
-                        <!-- </div> -->
+                    <div>
+                        <article class="uk-article">
+                            <h1 class="uk-article-title">#{DocioPageGenerator currentPrototypeName} Prototype</h1>
+                            <p class="uk-text-lead">#{DocioPageGenerator currentPrototype at("description")}</p>
+                            <table class="uk-table uk-table-justify uk-table-divider">
+                                <thead>
+                                    <tr>
+                                        <th class="uk-width-small">Slot</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #{PrototypePage slotsDocs}
+                                </tbody>
+                            </table>
+                        </article>
                     </div>
                 </div>
-                <!-- <div class="uk-section uk-section-primary"> -->
-                <!-- <div class="uk-child-width-expand" uk-grid> -->
-                <!-- <div> -->
-                <!-- <article class="uk-article uk-container"> -->
-                <!-- <h1 class="uk-article-title">#{DocioPageGenerator currentPrototypeName} Prototype</h1> -->
-                <!-- <p class="uk-text-lead">#{DocioPageGenerator currentPrototype at("description")}</p> -->
-                <!-- </article> -->
-                <!-- </div> -->
-                <!-- <div> -->
-                <!-- <div class="uk-container uk-column-1-2"> -->
-                <!-- <ul class="uk-nav uk-nav-default"> -->
-                <!-- #{PrototypePage slotsNavigation} -->
-                <!-- </ul> -->
-                <!-- </div> -->
-                <!-- </div> -->
-                <!-- </div> -->
-                <!-- </div> -->
-                <!-- <div> -->
-                <!-- </div> -->
-                <!-- <div class="uk-section"> -->
-                <!-- <div class="uk-container uk-container-small"> -->
-                <!-- #{PrototypePage slotsDocs} -->
-                <!-- </div> -->
-                <!-- </div> -->
             </div>
-            <a href="#" uk-totop uk-scroll></a>
-            </div>
+            <a href="#" uk-totop uk-scroll class="uk-position-bottom-left uk-position-fixed"></a>
+        </div>
     </body>
 </html>

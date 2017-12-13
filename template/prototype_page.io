@@ -15,14 +15,16 @@ PrototypePage := Object clone do(
     generateSlotsDocs := method(
         slotsNamesSorted foreach(slotName,
             slotDescription := DocioPageGenerator currentPrototype at("slots") at(slotName)
-            slotsDocs appendSeq("<h3 class=\"uk-h3\" id=\"#{slotName}\"><a class=\"uk-link-reset\">#{slotName}</a></h3>" interpolate)
-            slotsDocs appendSeq("<p>#{slotDescription}</p>" interpolate)
+            slotsDocs appendSeq("<tr>")
+            slotsDocs appendSeq("<td><h4 class=\"uk-h4\" id=\"#{slotName}\"><a class=\"uk-link-reset\">#{slotName}</a></h4></td>" interpolate)
+            slotsDocs appendSeq("<td>#{slotDescription}</td>" interpolate)
+            slotsDocs appendSeq("</tr>")
         )
     )
 
     generateSlotsNavigation := method(
         slotsNamesSorted foreach(slotName,
-            slotsNavigation appendSeq("<li><a href=\"##{slotName}\">#{slotName}</a></li>" interpolate)
+            slotsNavigation appendSeq("<li class=\"uk-padding-small uk-padding-remove-vertical\"><a href=\"##{slotName}\" uk-scroll>#{slotName}</a></li>" interpolate)
         )
     )
 
