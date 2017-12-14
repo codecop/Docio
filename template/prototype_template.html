@@ -25,8 +25,8 @@
                         <ul class="uk-navbar-nav">
                             <li>
                                 <a href="#" uk-icon="icon: triangle-down"></a>
-                                <div class="uk-navbar-dropdown uk-height-medium">
-                                    <ul class="uk-nav uk-navbar-dropdown-nav uk-flex uk-flex-column uk-flex-wrap uk-height-medium">
+                                <div class="uk-navbar-dropdown" style="overflow-x: auto; overflow-y: hidden; width: 100%">
+                                    <ul class="uk-nav uk-navbar-dropdown-nav uk-flex uk-flex-column uk-flex-wrap uk-height-medium uk-height-medium">
                                         #{PrototypePage slotsNavigation}
                                     </ul>
                                 </div>
@@ -75,17 +75,10 @@
                         <article class="uk-article">
                             <h1 class="uk-article-title">#{DocioPageGenerator currentPrototypeName} Prototype</h1>
                             <p class="uk-text-lead">#{DocioPageGenerator currentPrototype at("description")}</p>
-                            <table class="uk-table uk-table-justify uk-table-divider">
-                                <thead>
-                                    <tr>
-                                        <th class="uk-width-small">Slot</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #{PrototypePage slotsDocs}
-                                </tbody>
-                            </table>
+                            <h2 class="uk-h2">Slots</h2>
+                            <dl class="uk-description-list uk-description-list-divider">
+                                #{PrototypePage slotsDocs}
+                            </dl>
                         </article>
                     </div>
                 </div>
