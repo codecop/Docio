@@ -6,17 +6,51 @@
         <meta charset="utf-8">
 
         <title>#{Docio packageName} Reference</title>
-        <meta name="description" content="#{Docio packageName} Reference">
+        <meta name="description" content="#{Docio packageName}">
         <meta name="author" content="#{User name}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="uikit-3.0.0-beta.35/css/uikit.min.css" />
+        <link rel="stylesheet" href="main.css" />
         <script src="uikit-3.0.0-beta.35/js/uikit.min.js"></script>
         <script src="uikit-3.0.0-beta.35/js/uikit-icons.min.js"></script>
+        #{doFile("main.io")}
     </head>
 
     <body>
-        <ul>
-            #{doFile("main.io")}
-        </ul>
+        <div class="uk-section uk-section-primary uk-height-viewport">
+            <div class="uk-position-top">
+                <nav class="uk-navbar-container uk-navbar-transparent" uk-navbar>
+                    <div class="uk-navbar-right">
+
+                        <a class="uk-navbar-toggle" uk-search-icon uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+
+                    </div>
+
+                    <div class="nav-overlay uk-navbar-left uk-flex-1" hidden>
+
+                        <div class="uk-navbar-item uk-width-expand">
+                            <form class="uk-search uk-search-navbar uk-width-1-1">
+                                <input class="uk-search-input" type="search" placeholder="Search..." autofocus>
+                            </form>
+                        </div>
+
+                        <a class="uk-navbar-toggle" uk-close uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+
+                    </div>
+                </nav>
+            </div>
+            <div class="uk-container">
+                <a href="#nav" class="uk-link-reset" uk-scroll><h1 class="uk-heading-hero uk-text-center">#{Docio packageName asUppercase}</h1></a>
+            </div>
+        </div>
+
+        <!-- navigation map -->
+        <div id="nav" class="uk-section uk-section-secondary">
+            <div class="uk-container uk-container-expand" style="overflow-x: auto; overflow-y: hidden; height: #{if(MainPage maxSlotsNumber != 0, MainPage maxSlotsNumber, 1) * 1.8}em; will-change: transform">
+                <ul class="uk-nav uk-nav-default uk-flex uk-flex-column uk-flex-wrap uk-height-small">
+                    #{MainPage globalNavigation}
+                </ul>
+            </div>
+        </div>
     </body>
 </html>

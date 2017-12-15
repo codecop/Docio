@@ -181,12 +181,12 @@ DocioPageGenerator := Object clone do(
     This method creates a page for each object from the prototype_template.html.
     */
     generatePrototypesPages := method(prototypes,
-        Directory with(outputPath .. "/prototypes") createIfAbsent
+        Directory with(outputPath .. "/docs") createIfAbsent
         prototypes foreach(key, value,
             currentPrototypeName = key
             currentPrototype = value
 
-            prototypePage := File with(outputPath .. "/prototypes/#{currentPrototypeName asLowercase}.html" interpolate) remove open
+            prototypePage := File with(outputPath .. "/docs/#{currentPrototypeName asLowercase}.html" interpolate) remove open
             prototypePage setContents(prototypeTemplate contents interpolate) close
         )
     )
