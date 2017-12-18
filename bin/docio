@@ -15,7 +15,11 @@ Docio := Object clone do(
     categories := Map clone
     sourcesPath := nil
     outputPath := nil
+    //doc Docio packageInfo Returns package.json as an instance of Map.
+    packageInfo := nil
+    //doc Docio packageName Returns the name of the package as it's specified in the package.json.
     packageName := nil
+    packageDescription := nil
     templatePath := nil
 
     showUsage := method(
@@ -44,6 +48,7 @@ Docio := Object clone do(
 
         docioPackage := Eerie envs at(0) packageNamed("Docio")
 
+        // getting package.json
         packageJson := File with(sourcesPath .. "/package.json")
         if(packageJson exists,
             packageJson open,
@@ -52,8 +57,11 @@ Docio := Object clone do(
             return
         )
 
+        // setting packageInfo
+        packageInfo = Yajl parseJson(packageJson contents)
+
         // getting package name
-        packageName = Yajl parseJson(packageJson contents) at("name"); packageJson close
+        packageName = packageInfo at("name")
 
         if(packageName == nil,
           "Error: Please provide the name of the package in the package.json" println
