@@ -15,9 +15,9 @@ Docio := Object clone do(
     categories := Map clone
     sourcesPath := nil
     outputPath := nil
-    //doc Docio packageInfo Returns package.json as an instance of Map.
+    ///doc Docio packageInfo Returns package.json as an instance of Map.
     packageInfo := nil
-    //doc Docio packageName Returns the name of the package as it's specified in the package.json.
+    ///doc Docio packageName Returns the name of the package as it's specified in the package.json.
     packageName := nil
     packageDescription := nil
     templatePath := nil
@@ -79,9 +79,35 @@ Docio := Object clone do(
         doFile("DocsExtractor.io")
 
         // copy template
-        System system("cp -a #{templatePath}/. #{outputPath}" interpolate)
+        copyTemplate(Directory with(templatePath))
 
         readFolder()
+    )
+
+    copyTemplate := method(templateDir,
+        templateFiles := list()
+        templateFiles appendSeq(templateDir files)
+
+        getFiles := method(templateDir,
+            templateDir directories foreach(dir,
+                if((dir path containsSeq("./.") not) and (dir path containsSeq("../") not),
+                    templateFiles appendSeq(dir files)
+                    getFiles(dir)
+                )
+            )
+        )
+
+        getFiles(templateDir)
+
+        templateFiles foreach(item,
+            dirPath := outputPath .. item parentDirectory path afterSeq(templateDir path)
+            Directory with(dirPath) createIfAbsent
+            filePath := outputPath .. item path afterSeq(templateDir path)
+            if(filePath containsAnyCaseSeq(".ds_store") not and filePath containsSeq("main_template.html") not and filePath containsSeq("prototype_template.html") not and filePath pathExtension != "io",
+                /* filePath println */
+                item copyToPath(filePath)
+            )
+        )
     )
 
     readFolder := method(
