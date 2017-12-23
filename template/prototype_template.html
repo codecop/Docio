@@ -9,14 +9,16 @@
         <meta name="description" content="#{DocioPageGenerator currentPrototypeName} Reference">
         <meta name="author" content="#{User name}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="../uikit-3.0.0-beta.35/css/uikit.min.css" />
+        <link rel="stylesheet" href="../lib/uikit-3.0.0-beta.35/css/uikit.min.css" />
+        <link rel="stylesheet" href="../lib/prism/prism.css" />
         <link rel="stylesheet" href="../main.css" />
-        <script src="../uikit-3.0.0-beta.35/js/uikit.min.js"></script>
-        <script src="../uikit-3.0.0-beta.35/js/uikit-icons.min.js"></script>
+        <script src="../lib/uikit-3.0.0-beta.35/js/uikit.min.js"></script>
+        <script src="../lib/uikit-3.0.0-beta.35/js/uikit-icons.min.js"></script>
         #{doFile("prototype_page.io")}
     </head>
 
     <body>
+        <script src="../lib/prism/prism.js"></script>
         <div class="uk-offcanvas-content">
             <!-- menu buttons -->
             <div uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: 200">
