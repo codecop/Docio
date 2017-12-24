@@ -4,76 +4,115 @@ Eerie
 
 Directory setCurrentWorkingDirectory(System launchPath)
 
-showUsage := method(
-  "Docio — documentation generator for Eerie packages.\nUsage:\n\tdocio package=package_dir [template=path_to_template]" println
-)
-
 expandUserPath := method(inputPath,
     inputPath ?asMutable ?replaceFirstSeq("~/", User homeDirectory path .. "/")
 )
 
-if(System args size < 2,
-    showUsage()
-    System exit() 
-)
-
-options := System getOptions(System args)
-
-// help option
-if(options hasKey("help"), showUsage(); return)
-
-// package path argument
-sourcesPath := expandUserPath(options at("package")) 
-if(sourcesPath == nil,
-    showUsage()
-    return
-)
-
-docsPath := sourcesPath .. "/docs"
-
-docioPackage := Eerie envs at(0) packageNamed("Docio")
-
-packageJson := File with(sourcesPath .. "/package.json")
-if(packageJson exists,
-    packageJson open,
-
-    "Error: package.json didn't found" println
-    return
-)
-
-// getting package name
-packageName := Yajl parseJson(packageJson contents) at("name"); packageJson close
-
-if(packageName == nil,
-  "Error: Please provide the name of the package in the package.json" println
-  return
-)
-
-// Getting template
-templatePath := expandUserPath(options at("template"))
-if(templatePath == nil,
-    templatePath = docioPackage path .. "/template"
-)
-
-// extract raw docs
-System system("io ./DocsExtractor.io " .. sourcesPath)
-
-// copy template
-System system("cp -a #{templatePath}/. #{docsPath}" interpolate)
-
-
-File _write := File getSlot("write")
-File writeln := method(call evalArgs foreach(s, self _write(s)); self _write("\n"); self)
-
-RawDocsParser := Object clone do(
+// parse docs.txt
+Docio := Object clone do(
     prototypes := Map clone
     modules := Map clone
     categories := Map clone
+    sourcesPath := nil
+    outputPath := nil
+    ///doc Docio packageInfo Returns package.json as an instance of Map.
+    packageInfo := nil
+    ///doc Docio packageName Returns the name of the package as it's specified in the package.json.
+    packageName := nil
+    templatePath := nil
 
-    readFolder := method(path,
-        file := File with(Path with(path, "/docs/docs.txt"))
+    showUsage := method(
+        "Docio — documentation generator for Eerie packages.\nUsage:\n\tdocio package=package_dir [template=path_to_template]" println
+    )
+
+    init := method(
+        if(System args size < 2,
+            showUsage()
+            return
+        )
+
+        options := System getOptions(System args)
+
+        // help option
+        if(options hasKey("help"), showUsage(); return)
+
+        // package path argument
+        sourcesPath = expandUserPath(options at("package")) 
+        if(sourcesPath == nil,
+            showUsage()
+            return
+        )
+
+        outputPath = sourcesPath .. "/docs"
+
+        docioPackage := Eerie envs at(0) packageNamed("Docio")
+
+        // getting package.json
+        packageJson := File with(sourcesPath .. "/package.json")
+        if(packageJson exists,
+            packageJson open,
+
+            "Error: package.json didn't found" println
+            return
+        )
+
+        // setting packageInfo
+        packageInfo = Yajl parseJson(packageJson contents)
+
+        // getting package name
+        packageName = packageInfo at("name")
+
+        if(packageName == nil,
+          "Error: Please provide the name of the package in the package.json" println
+          return
+        )
+
+        // Getting template
+        templatePath = expandUserPath(options at("template"))
+        if(templatePath == nil,
+            templatePath = docioPackage path .. "/template"
+        )
+
+        // extract raw docs
+        System args = list("", sourcesPath)
+        doFile("DocsExtractor.io")
+
+        // copy template
+        copyTemplate(Directory with(templatePath))
+
+        readFolder()
+    )
+
+    copyTemplate := method(templateDir,
+        templateFiles := list()
+        templateFiles appendSeq(templateDir files)
+
+        getFiles := method(templateDir,
+            templateDir directories foreach(dir,
+                if((dir path containsSeq("./.") not) and (dir path containsSeq("../") not),
+                    templateFiles appendSeq(dir files)
+                    getFiles(dir)
+                )
+            )
+        )
+
+        getFiles(templateDir)
+
+        templateFiles foreach(item,
+            dirPath := outputPath .. item parentDirectory path afterSeq(templateDir path)
+            Directory with(dirPath) createIfAbsent
+            filePath := outputPath .. item path afterSeq(templateDir path)
+            if(filePath containsAnyCaseSeq(".ds_store") not and filePath containsSeq("main_template.html") not and filePath containsSeq("prototype_template.html") not and filePath pathExtension != "io",
+                /* filePath println */
+                item copyToPath(filePath)
+            )
+        )
+    )
+
+    readFolder := method(
+        file := File with(Path with(sourcesPath, "/docs/docs.txt"))
         file exists ifFalse(
-            "readFolder(#{path}/docs/docs.txt) fails\n" interpolate println
+            "Docio readFolder(#{sourcesPath}/docs/docs.txt) fails\n" interpolate println
             return
         )
 
@@ -92,15 +131,6 @@ RawDocsParser := Object clone do(
                 
                 prots := prototypes atIfAbsentPut(protoName, Map clone atPut("slots", Map clone))
 
-                moduleName := path lastPathComponent
-                if(moduleName == "iovm", moduleName = "Core")
-
-                prots atPut("module", moduleName)
-
-                mods := modules atIfAbsentPut(moduleName, Map clone)
-                modules atPut(moduleName, mods)
-                mods atPut(protoName, prots)
-
                 if(protoName == nil or slotName == nil, writeln("ERROR: " .. docEntry))
 
                 if(isSlot, 
@@ -115,364 +145,102 @@ RawDocsParser := Object clone do(
         )
 
         generateCategories()
+        writeDocsToJson()
     )
 
     generateCategories := method(
-        modules foreach(moduleName, module,
-            firstProto := nil
-            firstProtoName := module keys sort detect(k, module at(k) at("category"))
-            
-            catNameMap := Map clone
-            module values select(at("category")) foreach(m, 
-                count := catNameMap at(m at("category")) 
-                if(count == nil, count = 0)
-                catNameMap atPut(m at("category"), count + 1)
-            )
-            
-            maxCount := 0
-            catName := nil
-            catNameMap foreach(name, count,
-                if(count > maxCount, catName = name; maxCount = count)
-            )
-            
-            // генерирует для кейса "Eerie Exception", если закомментить эту строку
-            // но появляются другие проблемы
-            module foreach(k, v, if(v at("category") != catName, module removeAt(k)))
-            
-            if(catName == nil, catName = "Misc")
-            cat := categories atIfAbsentPut(catName asMutable strip, Map clone)
-            cat atPut(moduleName, module)
+        firstProto := nil
+        firstProtoName := prototypes keys sort detect(k, prototypes at(k) at("category"))
+
+        catNameMap := Map clone
+        prototypes values select(at("category")) foreach(m, 
+            count := catNameMap at(m at("category")) 
+            if(count == nil, count = 0)
+            catNameMap atPut(m at("category"), count + 1)
+        )
+
+        maxCount := 0
+        catName := nil
+        catNameMap foreach(name, count,
+            if(count > maxCount, catName = name; maxCount = count)
+        )
+
+        if(catName == nil, catName = "Misc")
+        categories atIfAbsentPut(catName asMutable strip, prototypes)
+    )
+
+    writeDocsToJson := method(
+        if(prototypes size < 1, return)
+        docsJson := File with(outputPath .. "/data.js") create
+        docsJson open
+        docsJson setContents("data = JSON.stringify(" .. prototypes asJson .. ");")
+        docsJson close
+    )
+)
+Docio clone := Docio
+
+//doc DocioPageGenerator Generates documentation pages.
+DocioPageGenerator := Object clone do(
+    mainTemplate := nil
+    prototypeTemplate := nil
+    templatePath := nil
+    outputPath := nil
+    currentPrototype := nil
+    currentPrototypeName := nil
+
+    ///doc DocioPageGenerator init(templatePath, outputPath)
+    init := method(tPath, oPath,
+        templatePath = tPath 
+        outputPath = oPath
+
+        mainTemplate = File with(tPath .. "/main_template.html")
+
+        mainTemplate exists ifFalse(
+            "Error: main_template.html didn't found" println
+            return
+        )
+
+        mainTemplate open
+
+        prototypeTemplate = File with(tPath .. "/prototype_template.html")
+
+        prototypeTemplate exists ifFalse(
+            "Error: prototype_template.html didn't found" println
+            return
+        )
+
+        prototypeTemplate open
+    )
+
+    ///doc DocioPageGenerator generateMainPage Generates the index.html from the main_template.html.
+    generateMainPage := method(
+        mainPage := File with(outputPath .. "/index.html") remove open
+        mainPage setContents(mainTemplate contents interpolate)
+    )
+
+    /*doc DocioPageGenerator generatePrototypesPages 
+    Generates a page for each of the prototype of the given map.
+    This method creates a page for each object from the prototype_template.html.
+    */
+    generatePrototypesPages := method(prototypes,
+        Directory with(outputPath .. "/docs") createIfAbsent
+        prototypes foreach(key, value,
+            currentPrototypeName = key
+            currentPrototype = value
+
+            prototypePage := File with(outputPath .. "/docs/#{currentPrototypeName asLowercase}.html" interpolate) remove open
+            prototypePage setContents(prototypeTemplate contents interpolate) close
         )
     )
 )
 
-RawDocsParser readFolder(sourcesPath)
+// main
+DocioPageGenerator clone := DocioPageGenerator
 
+Docio init
 
-Section := Object clone do(
-	items ::= nil
-	name ::= ""
-	path ::= ""
-	
-	sortedItems := method(
-		items keys sort map(k, itemNamed(k))
-	)
-	
-	linksHtml := method(selectedName,
-		s := Sequence clone
-		sortedItems foreach(item,
-			class := if(item name == selectedName, "indexItemSelected", "indexItem")
-			url := Path with(path, item name, "index.html")
-			if(item items size == 1,
-				url := Path with(path, item name, item items keys first, "index.html")
-			)
-			s appendSeq("<div class=", class, "><a href=", url, ">", item name, "</a></div>\n")
-			s
-		)
-	)
-	
-	itemNamed := method(name,
-		Section clone setItems(items at(name)) setName(name)
-	)
-)
+DocioPageGenerator init(Docio templatePath, Docio outputPath)
 
-Categories := Section clone setItems(RawDocsParser categories) 
+DocioPageGenerator generateMainPage()
 
-if(Categories items size < 1,
-  "No documentation comments found." println
-  return
-)
-
-// JSON DOCS --------------------------------------------------------
-
-jsonFile := File with(Path with(docsPath, "docs.json")) remove open
-jsonFile writeln(Categories items asJson)
-jsonFile close
-
-// CATEGORIES -------------------------------------------------------
-
-outFile := File with(Path with(docsPath, "index.html")) remove open
-outFile writeln("""<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<title>#{packageName} Reference</title>
-<META HTTP-EQUIV="EXPIRES" CONTENT=0>
-<link rel="stylesheet" href="docs.css"/>
-<script src="js/jquery.js" type="text/javascript"></script>
-<script src="js/browser.js"></script>
-</head>
-<body>
-""" interpolate)
-outFile writeln("<br>")
-outFile writeln("<h1>#{packageName} Reference</h1>" interpolate)
-//outFile writeln("<div class=Version>version " .. System version asString asMutable atInsertSeq(4, " ") atInsertSeq(7, " "))
-//outFile writeln(" generated on " .. Date clone now asString("%Y %m %d") .. "</div>")
-outFile writeln("<br><br><br><br><br>")
-
-outFile writeln("<table id=\"browser\" cellpadding=\"0\" cellspacing=\"0\">")
-outFile writeln("<tr id=\"categories-column\">")
-outFile writeln("<td id=\"categories\" class=\"column\" valign=\"top\">")
-outFile write(Categories linksHtml)
-outFile writeln("</td>")
-outFile writeln("</tr>")
-outFile writeln("</table>")
-outFile close
-
-// CATEGORY -------------------------------------------------------
-
-Categories sortedItems foreach(cat, 
-	cat sortedItems foreach(addon,
-		outFile := Directory with(Path with(docsPath, cat name)) createIfAbsent fileNamed("index.html") remove open
-		outFile writeln("""
-		<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-		<html>
-		<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-		<title>#{packageName} Reference</title>
-		<META HTTP-EQUIV="EXPIRES" CONTENT=0>
-		<link rel="stylesheet" href="../../docs.css">
-		</head>
-		<body>
-		""" interpolate)
-		outFile writeln("<br>")
-		outFile writeln("<h1>#{packageName} Reference</h1>" interpolate)
-		outFile writeln("<br><br><br><br><br>")
-		outFile writeln("<table id=\"browser\" cellpadding=\"0\" cellspacing=\"0\">")
-		outFile writeln("<tr>")
-		outFile writeln("<td valign=\"top\" class=\"column\">")
-		outFile write(Categories setPath("..") linksHtml(cat name))
-		outFile writeln("</td>")
-		outFile writeln("<td valign=\"top\" class=\"column\">")
-		outFile write(cat linksHtml)
-		outFile writeln("</td>")	
-		outFile writeln("</tr>")
-		outFile writeln("</table>")
-  	outFile writeln("</body>")
-  	outFile writeln("</html>")
-		outFile close
-	)
-)
-
-
-// ADDON -------------------------------------------------------
-
-Categories sortedItems foreach(cat,
-	cat sortedItems foreach(addon,
-		addon sortedItems foreach(proto,
-			outFile := Directory with(Path with(docsPath, cat name, addon name)) createIfAbsent fileNamed("index.html") remove open
-			outFile writeln("""
-			<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-			<html>
-			<head>
-			<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-			<title>#{packageName} Reference</title>
-			<META HTTP-EQUIV="EXPIRES" CONTENT=0>
-			<link rel="stylesheet" href="../../../docs.css">
-			</head>
-			<body>
-			""" interpolate)
-			outFile writeln("<br>")
-			outFile writeln("<h1>#{packageName} Reference</h1>" interpolate)
-			outFile writeln("<br><br><br><br><br>")
-			outFile writeln("<table id=\"browser\" cellpadding=\"0\" cellspacing=\"0\">")
-			outFile writeln("<tr>")
-			outFile writeln("<td valign=\"top\" class=\"column\">")
-			outFile write(Categories setPath("../..") linksHtml(cat name))
-			outFile writeln("</td>")
-			outFile writeln("<td valign=\"top\" class=\"column\">")
-			outFile writeln(cat setPath("..") linksHtml(addon name))
-			outFile writeln("</td>")
-			outFile writeln("<td valign=\"top\" class=\"column\">")
-			outFile write(addon linksHtml)
-			outFile writeln("</td>")	
-			outFile writeln("</tr>")
-			outFile writeln("</table>")
-			outFile writeln("</body>")
-			outFile writeln("</html>")
-			outFile close
-		)
-	)
-)
-
-// PROTOS -------------------------------------------------------
-
-Sequence do(
-	asHtml := method(
-		self asMutable replaceSeq(">", "&gt;") replaceSeq("<", "&lt;")
-	)
-)
-
-Categories sortedItems foreach(cat,
-	cat sortedItems foreach(addon,
-		addon items foreach(protoName, p,
-	
-	//writeln("protoName = ", protoName)
-	//p := prototypes at(protoName)
-	moduleName := p at("module")
-	outFile := Directory with(Path with(docsPath, cat name, moduleName, protoName)) createIfAbsent fileNamed("index.html") remove open
-	
-	outFile writeln("""<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-		<html>
-		<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-		<title>""" .. protoName .. """</title>
-		<META HTTP-EQUIV="EXPIRES" CONTENT=0>
-		<link rel="stylesheet" href="../../../../docs.css">
-		</head>
-		<body>
-		""")
-		
-		
-	//----------------------------------------------
-	outFile writeln("<br>")
-	outFile writeln("<h1>#{packageName} Reference</h1>" interpolate)
-	//outFile writeln("<br><br><br><br><br>")
-/*
-	outFile writeln("<table id=\"browser\" cellpadding=\"0\" cellspacing=\"0\">")
-	outFile writeln("<tr>")
-	outFile writeln("<td valign=\"top\" class=\"column\">")
-	//outFile write(Categories setPath("../..") linksHtml(cat name))
-	outFile write("<b>", cat name, "</b>", "&nbsp;&nbsp;<b><font color=#ccc>&gt;</font>")
-	
-	outFile writeln("</td>")
-	outFile writeln("<td valign=\"top\" class=\"column\">")
-//	outFile writeln(cat setPath("..") linksHtml(addon name))
-	outFile write("<b>", addon name, "</b>", "&nbsp;&nbsp;<b><font color=#ccc>&gt;</font>")
-	outFile writeln("</td>")
-	outFile writeln("<td valign=\"top\" class=\"column\">")
-	//outFile write(addon linksHtml(protoName))
-	outFile write("<b>", protoName, "</b>")
-	outFile writeln("</td>")	
-	outFile writeln("</tr>")
-	outFile writeln("</table>")
-	outFile writeln("</body>")
-	outFile writeln("</html>")
-*/
-	//----------------------------------------------
-		
-	//outFile writeln("<hr align=left color=#ccc height=1>")
-		
-	//	outFile writeln("<hr align=left color=#ddd height=1>")
-	outFile writeln("<br><br><br>")
-	outFile writeln("<br><br><br>")
-	outFile writeln("<a class='column' href='../../index.html'>", cat name, "</a>")
-	outFile writeln("&nbsp;&nbsp;<font color=#ccc>/</font>&nbsp;&nbsp;")
-	outFile writeln("<a class='column' href='../index.html'>", moduleName, "</a>")
-	outFile writeln("&nbsp;&nbsp;<font color=#ccc>/</font>&nbsp;&nbsp;")
-	outFile writeln("<b>", protoName, "</b>")
-	//outFile writeln("<h1>", protoName asMutable strip, " Proto</h1>")
-	//outFile writeln("<br><br><br><br><br><br>")
-	outFile writeln("<br><br><br>")
-	outFile writeln("<br><br><br>")
-
-	outFile writeln("<table border=0 cellspacing=0 style=\"margin-left:8em; width:40em; line-height:1.2em;\">")
-	
-	showSection := method(name, value,
-		outFile writeln("<tr>")
-		//outFile writeln("<td align=right><b>", name, "</b></td>")
-		outFile writeln("<td align=right></td>")
-		outFile writeln("<td></td>")
-		outFile writeln("<td>", value, "</td></tr>")
-	)
-	
-	showSpacer := method(
-		outFile writeln("<tr><td colspan=3>&nbsp;</td></tr>")
-	)
-	
-	//outFile writeln("<b>Protos:</b> ", getSlot(protoName) ?prototypes ?map(type) ?join(", "))
-
-	showMeta := method(name,
-		if(p at(name), showSection("<span class=proto" .. name asCapitalized .. ">" .. name .. "</span>", p at(name)))
-	)
-	
-	//showMeta("module")	
-	//showMeta("category")
-	//showMeta("copyright")
-	//showMeta("license")
-	//showMeta("credits")
-	showMeta("description")
-	//p keys map(s, "[" .. s .. "]") println
-
-	showSpacer
-	showSpacer
-
-	slots := p at("slots")
-	if (slots,
-		slotNames := slots keys //sort
-		/*
-		outFile writeln("<tr>")
-		outFile writeln("<td align=right>")
-		//outFile writeln("<h3>index</h3>")
-		outFile writeln("</td>")
-		outFile writeln("<td></td>")
-		outFile writeln("<td>")
-		
-		//outFile writeln("<div class=slotIndex>")
-		
-		
-		try(
-			if(Lobby perform(protoName),
-				names := getSlot(protoName) slotNames remove("type") select(beginsWithSeq("_") not)
-				slotNames foreach(slotName,
-					n := slotName beforeSeq("(") asSymbol 
-					if(names contains(n), names remove(n))
-				)
-				slotNames appendSeq(names)
-			)
-		)
-		
-		slotNames = slotNames sort remove("init")
-		
-		slotNames foreach(k,
-			s := slots at(k)
-			outFile writeln("<a href=\"#" .. protoName .. "-" .. k beforeSeq("(") asHtml .. "\">")
-			if(k containsSeq("("), k = k beforeSeq("(") .. "()")
-			outFile writeln(k asHtml)
-			if(s ?args, outFile writeln("()"))
-			outFile writeln("</a><br>")
-		)
-
-		outFile writeln("</td>")
-		outFile writeln("</tr>")
-*/
-		showSpacer
-		
-		outFile writeln("<tr>")
-		outFile writeln("<td align=right>")
-		//outFile writeln("<h3>slots</h3>")
-		outFile writeln("</td>")
-		outFile writeln("<td></td>")
-		outFile writeln("<td>")
-		if(slots size > 0, outFile writeln("<hr align=left color=#ddd height=1>"))
-		outFile writeln("<br><br>")
-		//slotNames = slotNames map(asMutable strip asSymbol)
-		
-		slotNames sort foreach(k,
-			s := slots at(k)
-			if(s, s = s strip)
-			isPrivate := s ?beginsWithSeq("Private")
-			if(isPrivate, outFile writeln("<font color=#888>"))
-			isDeprecated := s ?beginsWithSeq("Deprecated")
-			if(isDeprecated, outFile writeln("<font color=#55a>"))
-			outFile writeln("<a name=\"" .. protoName .. "-" .. k beforeSeq("(") asHtml .. "\"></a><b>")
-			outFile writeln(k asHtml)
-			//if(s ?args, outFile writeln("(</b><i>" .. s args map(asHtml) join(", ") .. "</i><b>)"))
-			outFile writeln("</b>")
-			outFile writeln("<p>")
-			outFile writeln("<div class=slotDescription>")
-			if(s, outFile writeln(s), outFile writeln("<div class=error>undocumented</div>"))
-			if(isPrivate or isDeprecated, outFile writeln("</font>"))
-			outFile writeln("</div>")
-		)
-	)
-	outFile writeln("</td>")
-	outFile writeln("</tr>")	
-
-	outFile writeln("</table>")
-	outFile writeln("<br><br><br><br><br>")
-	outFile writeln("</body>")
-	outFile writeln("</html>")
-	outFile close
-	//System exit
-)))
+DocioPageGenerator generatePrototypesPages(Docio prototypes)
