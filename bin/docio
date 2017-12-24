@@ -19,7 +19,6 @@ Docio := Object clone do(
     packageInfo := nil
     ///doc Docio packageName Returns the name of the package as it's specified in the package.json.
     packageName := nil
-    packageDescription := nil
     templatePath := nil
 
     showUsage := method(
@@ -146,6 +145,7 @@ Docio := Object clone do(
         )
 
         generateCategories()
+        writeDocsToJson()
     )
 
     generateCategories := method(
@@ -168,6 +168,14 @@ Docio := Object clone do(
         if(catName == nil, catName = "Misc")
         categories atIfAbsentPut(catName asMutable strip, prototypes)
     )
+
+    writeDocsToJson := method(
+        if(prototypes size < 1, return)
+        docsJson := File with(outputPath .. "/data.js") create
+        docsJson open
+        docsJson setContents("data = JSON.stringify(" .. prototypes asJson .. ");")
+        docsJson close
+    )
 )
 Docio clone := Docio
 
@@ -180,7 +188,7 @@ DocioPageGenerator := Object clone do(
     currentPrototype := nil
     currentPrototypeName := nil
 
-    //doc DocioPageGenerator init(templatePath, outputPath)
+    ///doc DocioPageGenerator init(templatePath, outputPath)
     init := method(tPath, oPath,
         templatePath = tPath 
         outputPath = oPath
@@ -204,7 +212,7 @@ DocioPageGenerator := Object clone do(
         prototypeTemplate open
     )
 
-    //doc DocioPageGenerator generateMainPage Generates the index.html from the main_template.html.
+    ///doc DocioPageGenerator generateMainPage Generates the index.html from the main_template.html.
     generateMainPage := method(
         mainPage := File with(outputPath .. "/index.html") remove open
         mainPage setContents(mainTemplate contents interpolate)
