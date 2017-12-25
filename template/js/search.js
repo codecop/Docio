@@ -18,7 +18,7 @@ DocioSearch.setQuery = function(query) {
     DocioSearch.result.slots = {};
     DocioSearch.result.descs = {};
 
-    if (query.length > 1) {
+    if (query.length > 0) {
         DocioSearch.__searchPrototypes();
     }
 
