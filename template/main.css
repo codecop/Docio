@@ -1,12 +1,18 @@
 .header-anchor-icon { 
-    display: inline-block; 
+    display: none;
     width: 25px;
     margin-left:-25px;
 }
 
-.header-anchor::before {
-  content: "";
-  display: block;
-  height: 100px; /* navigation bar offset */
-  margin: -100px 0 0;
+.header-anchor:hover .header-anchor-icon {
+    display: inline-block;
 }
+
+/* из-за этого баг с позицией ссылки-заголовка */
+/* .header-anchor::before { */
+  /* content: ""; */
+  /* display: block; */
+  /* height: 100px; */
+  /* margin: -100px 0 0; */
+  /* visibility: hidden; */
+/* } */
