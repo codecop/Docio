@@ -45,7 +45,7 @@ PrototypePage := Object clone do(
                 )
                 
                 // fill up slots submenus
-                shouldScroll := if(protoName == DocioPageGenerator currentPrototypeName, "uk-scroll", "")
+                shouldScroll := if(protoName == DocioPageGenerator currentPrototypeName, "onclick=\"updateAddressWithAnchorLink(this)\" uk-scroll=\"offset: 100\"", "")
 
                 if(slotsSorted size > 0,
                     globalNavigation appendSeq("<ul class=\"uk-nav-sub\">")
