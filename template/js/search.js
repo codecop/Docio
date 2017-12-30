@@ -99,13 +99,13 @@ DocioSearch.__searchSlotsInPrototype = function(prototypeKey) {
 // View
 DocioSearchView = {};
 
-UIkit.util.on(".nav-overlay", "show", function() {
-    UIkit.dropdown(".search-results").show();
-});
-
-UIkit.util.on(".nav-overlay", "hide", function() {
-    UIkit.dropdown(".search-results").hide();
-});
+// UIkit.util.on(".nav-overlay", "show", function() {
+    // UIkit.dropdown(".search-results").show();
+// });
+// 
+// UIkit.util.on(".nav-overlay", "hide", function() {
+    // UIkit.dropdown(".search-results").hide();
+// });
 
 DocioSearchView.clearResultsList = function() {
     var dl = document.getElementById("search-results-table");

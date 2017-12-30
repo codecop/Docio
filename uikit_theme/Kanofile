@@ -1,32 +1,11 @@
-Options do(
-  uname := option(
-    """Prints platform name."""
-    System runCommand("uname") stdout strip println)
-)
+Namespaces Default do(
+    build := task(
+        """Compiles sass files into css and places the theme as ../template/uikit-docio.css"""
+        System system("sass site.scss ../template/uikit-docio.css")
+    )
 
-Time := Namespace clone do(
-  date := task(
-    """Prints local date and time."""
-    Date now println)
-)
-
-Directory describe do(
-  task("files") describe("Prints names of the files in current directory") after(result, result map(name) sort)
-
-  task("mk") do(
-    describe("Creates new directory.")
-    callsSlot("create")
-
-    before(args,
-      targetObj = Directory with(args at(0))
-      args)
-
-    after(result, "Created directory")
-  )
-) done
-
-Directory do(
-  path := task(
-    """Prints current working directory."""
-    Path absolute(Directory path) println)
+    watch := task(
+        """Rebuild output css file on changes in site.scss."""
+        System system("sass --watch site.scss:../template/uikit-docio.css")
+    )
 )
