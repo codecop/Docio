@@ -1,10 +1,28 @@
 @import "fonts.scss";
 
+// fonts
 $global-font-family: "Open Sans";
 $base-body-font-family: $global-font-family;
 $base-code-font-family: "Fira Mono";
 $base-heading-font-family: "Glegoo";
+$base-heading-font-weight: bold;
 $base-pre-font-family: "Glegoo";
 $inverse-global-color-mode: none;
 $navbar-nav-item-font-family: $global-font-family;
 $logo-font-family: $global-font-family;
+
+// colors
+
+$global-muted-background: #F2F2F2;
+$global-muted-color: #B5B5B5;
+$global-color: #344871;
+$global-primary-background: #8cafc3;
+$global-success-background: #60B66D;
+$global-warning-background: #dd9f3b;
+$global-danger-background: #de513c;
+$global-background: #faf9fa;
+$global-secondary-background: #344871;
+$global-emphasis-color: #344871;
+$global-link-color: #8badc1;
+$global-link-hover-color: #5d7481;
+$table-row-active-background: #F2F2F2;
