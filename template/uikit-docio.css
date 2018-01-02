@@ -510,12 +510,12 @@ pre code {
 /* Selection pseudo-element
  ========================================================================== */
 ::-moz-selection {
-  background: #39f;
+  background: #4AC3F8;
   color: #fff;
   text-shadow: none; }
 
 ::selection {
-  background: #39f;
+  background: #4AC3F8;
   color: #fff;
   text-shadow: none; }
 
