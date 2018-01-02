@@ -67,7 +67,7 @@
             <div id="contents-menu" uk-offcanvas="mode: reveal">
                 <div class="uk-offcanvas-bar">
                     <button class="uk-offcanvas-close" type="button" uk-close></button>
-                    <h3>#{DocioPageGenerator currentPrototypeName} Prototype</h3>
+                    <h3>#{DocioPageGenerator currentPrototypeName}</h3>
                     <p>#{DocioPageGenerator currentPrototype at("description")}</p>
                     <ul class="uk-nav-default" uk-nav="multiple: true;">
                         #{PrototypePage globalNavigation}
@@ -79,7 +79,7 @@
                 <div class="uk-container uk-container-small">
                     <div>
                         <article class="uk-article">
-                            <h1 class="uk-article-title">#{DocioPageGenerator currentPrototypeName} Prototype</h1>
+                            <h1 class="uk-article-title">#{DocioPageGenerator currentPrototypeName}</h1>
                             <p class="uk-text-lead">#{DocioPageGenerator currentPrototype at("description")}</p>
                             #{if(DocioPageGenerator currentPrototype at("slots") size > 0, "<h2 class=\"uk-h2\">Slots</h2>", "")}
                             <dl class="uk-description-list uk-description-list-divider">
