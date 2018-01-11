@@ -1,12 +1,9 @@
 #!/usr/local/bin/io
 
 Eerie
+Markdown
 
 Directory setCurrentWorkingDirectory(System launchPath)
-
-expandUserPath := method(inputPath,
-    inputPath ?asMutable ?replaceFirstSeq("~/", User homeDirectory path .. "/")
-)
 
 // parse docs.txt
 Docio := Object clone do(
@@ -15,137 +12,158 @@ Docio := Object clone do(
     categories := Map clone
     sourcesPath := nil
     outputPath := nil
-    ///doc Docio packageInfo Returns package.json as an instance of Map.
+    //doc Docio packageInfo Returns package.json as an instance of Map.
     packageInfo := nil
-    ///doc Docio packageName Returns the name of the package as it's specified in the package.json.
+    //doc Docio packageName Returns the name of the package as it's specified in the package.json.
     packageName := nil
     templatePath := nil
+
+
+    init := method(
+        checkNumberOfArguments()
+        parseOptions()
+        parsePackageJSON()
+        copyTemplate(Directory with(templatePath))
+        parseDocs()
+    )
+
+    checkNumberOfArguments := method(
+        if(System args size < 2,
+            showUsage()
+            System exit(0)
+        )
+    )
 
     showUsage := method(
         "Docio — documentation generator for Eerie packages.\nUsage:\n\tdocio package=package_dir [template=path_to_template]" println
     )
 
-    init := method(
-        if(System args size < 2,
-            showUsage()
-            return
-        )
-
+    parseOptions := method(
         options := System getOptions(System args)
+        parseHelpOption(options)
+        parsePackageOption(options)
+        parseTemplateOption(options)
+    )
 
-        // help option
-        if(options hasKey("help"), showUsage(); return)
+    parseHelpOption := method(options,
+        if(options hasKey("help"), showUsage(); System exit(0))
+    )
 
-        // package path argument
-        sourcesPath = expandUserPath(options at("package")) 
+    parsePackageOption := method(options,
+        sourcesPath = options at("package") stringByExpandingTilde
         if(sourcesPath == nil,
             showUsage()
-            return
+            System exit(0)
+            ,
+            outputPath = sourcesPath .. "/docs"
         )
+    )
 
-        outputPath = sourcesPath .. "/docs"
-
+    parseTemplateOption := method(options,
         docioPackage := Eerie envs at(0) packageNamed("Docio")
-
-        // getting package.json
-        packageJson := File with(sourcesPath .. "/package.json")
-        if(packageJson exists,
-            packageJson open,
-
-            "Error: package.json didn't found" println
-            return
+        templatePath = options at("template") stringByExpandingTilde
+        if(templatePath == nil,
+            templatePath = docioPackage path .. "/template"
         )
+    )
 
-        // setting packageInfo
+    parsePackageJSON := method(
+        packageJson := getDestinationPackageJSON()
         packageInfo = Yajl parseJson(packageJson contents)
-
-        // getting package name
         packageName = packageInfo at("name")
 
         if(packageName == nil,
           "Error: Please provide the name of the package in the package.json" println
-          return
+          System exit(0)
         )
+    )
 
-        // Getting template
-        templatePath = expandUserPath(options at("template"))
-        if(templatePath == nil,
-            templatePath = docioPackage path .. "/template"
+    getDestinationPackageJSON := method(
+        packageJson := File with(sourcesPath .. "/package.json")
+        if(packageJson exists,
+            packageJson open
+            return packageJson
+            ,
+
+            "Error: package.json didn't found" println
+            System exit(0)
         )
-
-        // extract raw docs
-        System args = list("", sourcesPath)
-        doFile("DocsExtractor.io")
-
-        // copy template
-        copyTemplate(Directory with(templatePath))
-
-        readFolder()
     )
 
     copyTemplate := method(templateDir,
-        templateFiles := list()
-        templateFiles appendSeq(templateDir files)
-
-        getFiles := method(templateDir,
-            templateDir directories foreach(dir,
-                if((dir path containsSeq("./.") not) and (dir path containsSeq("../") not),
-                    templateFiles appendSeq(dir files)
-                    getFiles(dir)
-                )
+        // switch to template directory
+        currentDirectoryPath := Directory currentWorkingDirectory
+        Directory setCurrentWorkingDirectory(templateDir path)
+        // copy files
+        Directory walk(item, 
+            if(item type == "Directory",
+                createDirectoryInDestination(item),
+                copyFileToDestination(item)
             )
         )
+        // switch back to current directory
+        Directory setCurrentWorkingDirectory(currentDirectoryPath)
+    )
 
-        getFiles(templateDir)
+    createDirectoryInDestination := method(directory,
+        directoryPath := outputPath .. "/" .. directory path afterSeq("./")
+        Directory with(directoryPath) createIfAbsent
+    )
 
-        templateFiles foreach(item,
-            dirPath := outputPath .. item parentDirectory path afterSeq(templateDir path)
-            Directory with(dirPath) createIfAbsent
-            filePath := outputPath .. item path afterSeq(templateDir path)
-            if(filePath containsAnyCaseSeq(".ds_store") not and filePath containsSeq("main_template.html") not and filePath containsSeq("prototype_template.html") not and filePath pathExtension != "io",
-                /* filePath println */
-                item copyToPath(filePath)
-            )
+    copyFileToDestination := method(file,
+        if(file path pathExtension != "DS_Store" and file name != "main_template.html" and file name != "prototype_template.html" and file path pathExtension != "io",
+            destinationPath := outputPath .. "/" .. file path afterSeq("./")
+            file copyToPath(destinationPath)
         )
     )
 
-    readFolder := method(
-        file := File with(Path with(sourcesPath, "/docs/docs.txt"))
-        file exists ifFalse(
-            "Docio readFolder(#{sourcesPath}/docs/docs.txt) fails\n" interpolate println
-            return
-        )
-
-        file contents split("------\n") foreach(docEntry,
-            isSlot := docEntry beginsWithSeq("doc")
-            header := docEntry beforeSeq("\n") afterSeq(" ") 
-
-            if(header,
-                header = header asMutable strip asSymbol
-
-                protoName := header beforeSeq(" ") ?asMutable ?strip ?asSymbol
-                
-                slotName := header afterSeq(" ") ?asMutable ?strip ?asSymbol
-
-                description := docEntry afterSeq("\n")
-                
-                prots := prototypes atIfAbsentPut(protoName, Map clone atPut("slots", Map clone))
-
-                if(protoName == nil or slotName == nil, writeln("ERROR: " .. docEntry))
-
-                if(isSlot, 
-                    prots at("slots") atPut(slotName, description),
-                    // else
-                    prots atPut(slotName, description)
-                ),
-
-                // else
-                if(protoName == nil or slotName == nil, writeln("ERROR: " .. docEntry))
-            )
-        )
-
+    parseDocs := method(
+        extractDocs()
+        docsTxt := getDocsTxt()
+        docsTxt contents split("------\n") foreach(entry, parseDocEntry(entry))
         generateCategories()
         writeDocsToJson()
+    )
+
+    extractDocs := method(
+        System args = list("", sourcesPath)
+        doFile("DocsExtractor.io")
+    )
+
+    getDocsTxt := method(
+        docsTxt := File with(Path with(sourcesPath, "/docs/docs.txt"))
+        docsTxt exists ifFalse(
+            "Docio parseDocs(#{sourcesPath}/docs/docs.txt) fails\n" interpolate println
+            System exit(0)
+        )
+
+        return docsTxt
+    )
+
+    parseDocEntry := method(docEntry,
+        header := docEntry beforeSeq("\n") afterSeq(" ") 
+        if(header, parseDocHeader(header, docEntry))
+    )
+
+    parseDocHeader := method(header, docEntry,
+        headerCopy := header asMutable strip asSymbol
+        protoName := headerCopy beforeSeq(" ") ?asMutable ?strip ?asSymbol
+        prototypes atIfAbsentPut(protoName, Map clone atPut("slots", Map clone))
+        if(protoName == nil, writeln("ERROR: " .. headerCopy))
+        parseDocSlot(headerCopy, docEntry, protoName)
+    )
+
+    parseDocSlot := method(header, docEntry, protoName,
+        slotName := header afterSeq(" ") ?asMutable ?strip ?asSymbol
+        if(slotName == nil, writeln("ERROR: " .. header))
+        description := docEntry afterSeq("\n") markdownToHTML
+
+        isSlot := docEntry beginsWithSeq("doc")
+        if(isSlot, 
+            prototypes at(protoName) at("slots") atPut(slotName, description)
+            ,
+            prototypes at(protoName) atPut(slotName, description)
+        )
     )
 
     generateCategories := method(
