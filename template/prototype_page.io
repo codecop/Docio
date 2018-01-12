@@ -5,7 +5,7 @@ PrototypePage := Object clone do(
     slotsNamesSorted := nil
 
     init := method(
-        slotsNamesSorted = DocioPageGenerator currentPrototype at("slots") keys sort
+        slotsNamesSorted = Docio PageGenerator currentPrototype at("slots") keys sort
 
         generateSlotsDocs()
         generateSlotsNavigation()
@@ -14,7 +14,7 @@ PrototypePage := Object clone do(
 
     generateSlotsDocs := method(
         slotsNamesSorted foreach(slotName,
-            slotDescription := DocioPageGenerator currentPrototype at("slots") at(slotName)
+            slotDescription := Docio PageGenerator currentPrototype at("slots") at(slotName)
             slotsDocs appendSeq("<dt><h4 class=\"uk-h4\" id=\"#{slotName}\"><a class=\"uk-link-reset header-anchor\" href=\"##{slotName}\" onclick=\"updateAddressWithAnchorLink(this)\" uk-scroll=\"offset: 100\"><span class=\"header-anchor-icon\" uk-icon=\"icon: link\"></span>#{slotName}</a></h4></dt>" interpolate)
             slotsDocs appendSeq("<dd>#{slotDescription}</dd>" interpolate)
         )
@@ -38,18 +38,18 @@ PrototypePage := Object clone do(
                 slotsSorted := categoryObj at(protoName) at("slots") keys sort
                 parentClass := if(slotsSorted size > 0, "uk-parent", "")
 
-                if(protoName != DocioPageGenerator currentPrototypeName,
+                if(protoName != Docio PageGenerator currentPrototypeName,
                     globalNavigation appendSeq("<li class=\"#{parentClass}\"><a href=\"#{protoName asLowercase}.html\">#{protoName}</a>" interpolate),
                     // else
                     globalNavigation appendSeq("<li class=\"uk-active #{parentClass}\"><a href=\"#\">#{protoName}</a>" interpolate)
                 )
                 
                 // fill up slots submenus
-                shouldScroll := if(protoName == DocioPageGenerator currentPrototypeName, "onclick=\"updateAddressWithAnchorLink(this)\" uk-scroll=\"offset: 100\"", "")
+                shouldScroll := if(protoName == Docio PageGenerator currentPrototypeName, "onclick=\"updateAddressWithAnchorLink(this)\" uk-scroll=\"offset: 100\"", "")
 
                 if(slotsSorted size > 0,
                     globalNavigation appendSeq("<ul class=\"uk-nav-sub\">")
-                    protoPageLink := if(protoName != DocioPageGenerator currentPrototypeName, "#{protoName asLowercase}.html" interpolate, "")
+                    protoPageLink := if(protoName != Docio PageGenerator currentPrototypeName, "#{protoName asLowercase}.html" interpolate, "")
                     slotsSorted foreach(slotName,
                         globalNavigation appendSeq("<li><a href=\"#{protoPageLink}##{slotName}\" #{shouldScroll}>#{slotName}</a></li>" interpolate)
                     )

@@ -21,7 +21,7 @@ MainPage := Object clone do(
                 
                 if(slotsSorted size > 0,
                     globalNavigation appendSeq("<ul class=\"uk-nav-sub\">")
-                    protoPageLink := if(protoName != DocioPageGenerator currentPrototypeName, "docs/#{protoName asLowercase}.html" interpolate, "")
+                    protoPageLink := if(protoName != Docio PageGenerator currentPrototypeName, "docs/#{protoName asLowercase}.html" interpolate, "")
                     slotsSorted foreach(slotName,
                         globalNavigation appendSeq("<li><a href=\"#{protoPageLink}##{slotName}\">#{slotName}</a></li>" interpolate)
                     )

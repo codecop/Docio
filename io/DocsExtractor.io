@@ -1,3 +1,4 @@
+// This file is from Io's sources
 
 File do(
 	docSlicesFor := method(name,
@@ -73,6 +74,3 @@ DocsExtractor := Object clone do(
 	)
 )
 
-de := DocsExtractor clone
-de setPath(System args at(1))
-if(System args at(3) == "clean", de clean, de extract)

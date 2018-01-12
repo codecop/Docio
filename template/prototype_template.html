@@ -5,8 +5,8 @@
     <head>
         <meta charset="utf-8">
 
-        <title>#{DocioPageGenerator currentPrototypeName} Prototype Reference</title>
-        <meta name="description" content="#{DocioPageGenerator currentPrototypeName} Reference">
+        <title>#{Docio PageGenerator currentPrototypeName} Prototype Reference</title>
+        <meta name="description" content="#{Docio PageGenerator currentPrototypeName} Reference">
         <meta name="author" content="#{Docio packageInfo at("author")}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../lib/uikit-3.0.0-beta.35/css/uikit.min.css" />
@@ -67,8 +67,8 @@
             <div id="contents-menu" uk-offcanvas="mode: reveal">
                 <div class="uk-offcanvas-bar">
                     <button class="uk-offcanvas-close" type="button" uk-close></button>
-                    <h3>#{DocioPageGenerator currentPrototypeName}</h3>
-                    <p>#{DocioPageGenerator currentPrototype at("description")}</p>
+                    <h3>#{Docio PageGenerator currentPrototypeName}</h3>
+                    <p>#{Docio PageGenerator currentPrototype at("description")}</p>
                     <ul class="uk-nav-default" uk-nav="multiple: true;">
                         #{PrototypePage globalNavigation}
                     </ul>
@@ -79,9 +79,9 @@
                 <div class="uk-container uk-container-small">
                     <div>
                         <article class="uk-article">
-                            <h1 class="uk-article-title">#{DocioPageGenerator currentPrototypeName}</h1>
-                            <p class="uk-text-lead">#{DocioPageGenerator currentPrototype at("description")}</p>
-                            #{if(DocioPageGenerator currentPrototype at("slots") size > 0, "<h2 class=\"uk-h2\">Slots</h2>", "")}
+                            <h1 class="uk-article-title">#{Docio PageGenerator currentPrototypeName}</h1>
+                            <p class="uk-text-lead">#{Docio PageGenerator currentPrototype at("description")}</p>
+                            #{if(Docio PageGenerator currentPrototype at("slots") size > 0, "<h2 class=\"uk-h2\">Slots</h2>", "")}
                             <dl class="uk-description-list uk-description-list-divider">
                                 #{PrototypePage slotsDocs}
                             </dl>
