@@ -7,6 +7,6 @@
   "readme":       "README.md",
   "dependencies": {
     "protos":   ["Yajl"],
-    "packages": ["https://github.com/AlesTsurko/Markdown.git"]
+    "packages": ["https://github.com/AlesTsurko/Markdown.git", "https://github.com/bekkopen/jasmineio.git"]
   }
 }

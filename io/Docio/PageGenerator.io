@@ -41,10 +41,10 @@ PageGenerator := Object clone do(
         mainPage setContents(mainTemplate contents interpolate)
     )
 
-    /*doc PageGenerator generatePrototypesPages 
-    Generates a page for each of the prototype of the given map.
-    This method creates a page for each object from the prototype_template.html.
-    */
+/*doc PageGenerator generatePrototypesPages 
+Generates a page for each of the prototype of the given map.
+This method creates a page for each object from the prototype_template.html.
+*/
     generatePrototypesPages := method(
         Directory with(outputPath .. "/docs") createIfAbsent
         Docio prototypes foreach(key, value,
