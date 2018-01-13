@@ -11,7 +11,7 @@ File do(
 			s
 		) appendSeq(contents slicesBetween("/*" .. name .. " ", "*/"))		
 	)
-	
+
 	docSlices := method(
 		docSlicesFor("doc")
 	)
@@ -37,29 +37,26 @@ DocsExtractor := Object clone do(
 	)
 
 	extract := method(
-		//writeln("\n", folder path)
 		outFile remove open
 		sourceFiles foreach(file,
-			//writeln("	", file name, " ")
 			file docSlices foreach(d,
-				/*
-				header := d beforeSeq("\n") strip
-				protoName := header beforeSeq(" ")
-				slotName := header afterSeq(" ")
-				comment := d afterSeq("\n")
-				*/
-				outFile write("doc ", d strip, "\n------\n")
+                docString := removeWhitespacesAtLineBegginningsOfString(d)
+				outFile write("doc ", docString strip, "\n------\n")
 			)
 			
 			file metadocSlices foreach(d,
-				outFile write("metadoc ", d strip, "\n------\n")
+                docString := removeWhitespacesAtLineBegginningsOfString(d)
+				outFile write("metadoc ", docString strip, "\n------\n")
 			)
 		)
 		outFile close
 	)
-	
+
 	sourceFiles := method(cFiles appendSeq(ioFiles))
-	//sourceFiles := method(ioFiles)
+
+    removeWhitespacesAtLineBegginningsOfString := method(string,
+        string split("\n") map(lstrip) join("\n")
+    )
 
 	cFiles := method(
 		if(folder directoryNamed("source") exists,

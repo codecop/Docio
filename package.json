@@ -6,7 +6,7 @@
   "website":      "https://github.com/AlesTsurko/docio",
   "readme":       "README.md",
   "dependencies": {
-    "protos":   ["Yajl"],
+    "protos":   ["Yajl", "Regex"],
     "packages": ["https://github.com/AlesTsurko/Markdown.git", "https://github.com/bekkopen/jasmineio.git"]
   }
 }

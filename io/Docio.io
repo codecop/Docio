@@ -1,5 +1,6 @@
 Eerie
 Markdown
+Regex
 
 //metadoc Docio category API
 //metadoc Docio description Main interface for Docio. 
@@ -161,6 +162,18 @@ Docio := Object clone do(
         PageGenerator generateSite
     )
 
+    /*doc Docio printDocFor(query) 
+    Prints documentation for given query.
+    The method will try to extract the documentation from `doc` comments, 
+    if the `docs/docs.txt` wouldn't exist in the package's directory.
+
+    Examples of query:
+    ```
+    "ProtoName"
+    "ProtoName slotName"
+    "AddonName ProtoName slotName"
+    ```
+    */
     printDocFor := method(query,
         queryList := getListForQuery(query)
         addonName := queryList at(0)
@@ -197,20 +210,37 @@ Docio := Object clone do(
     )
 
     getDocStringForQueryList := method(queryList,
+        //TODO: refactor
         docString := ""
         (queryList size == 1) ifTrue(
             docString := prototypes at(queryList at(0)) ?at("description")
         )
         (queryList size == 2) ifTrue(
-            docString := prototypes at(queryList at(0)) ?at("slots") ?at(queryList at(1))
+            protoName := queryList at(0)
+            slotsMap := prototypes at(protoName) ?at("slots")
+            slotKey := getSlotKeyInMapForQuery(slotsMap, queryList at(1))
+            docString := protoName .. " " .. slotKey .. "\n" .. slotsMap ?at(slotKey)
         )
         (queryList size == 3) ifTrue(
-            docString := prototypes at(queryList at(1)) ?at("slots") ?at(queryList at(2))
+            protoName := queryList at(1)
+            slotsMap := prototypes at(protoName) ?at("slots")
+            slotKey := getSlotKeyInMapForQuery(slotsMap, queryList at(2))
+            docString := protoName .. " " .. slotKey .. "\n" .. slotsMap ?at(slotKey)
         )
         (queryList size > 3) ifTrue(
-            Exception raise("Wrong query: " queryList join(" "))
+            Exception raise("Wrong query: " .. (queryList join(" ")))
         )
         return docString
+    )
+
+    getSlotKeyInMapForQuery := method(map, query,
+        regex := "\\b".. query .. "(?:(?:\\(.*\\))|\\b)"
+        slotKey := map ?keys ?detect(matchesRegex(regex))
+        if(slotKey not or map not, 
+            Exception raise("Can't find slot named " .. query)
+            ,
+            slotKey
+        )
     )
 
     printDocsString := method(docString,
