@@ -49,3 +49,6 @@ In the HTML files you can use Io code:
 ```
 
 Check out `template` folder to get an example.
+
+## Examples
+Docio [site](http://alestsurko.by/docio/) was fully generated with Docio itself.
