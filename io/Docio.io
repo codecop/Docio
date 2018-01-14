@@ -129,9 +129,9 @@ Docio := Object clone do(
 
     Examples of query:
     ```
-    "ProtoName"
-    "ProtoName slotName"
-    "AddonName ProtoName slotName"
+        "ProtoName"
+           "ProtoName slotName"
+      "AddonName ProtoName slotName"
     ```
     */
     printDocFor := method(query,

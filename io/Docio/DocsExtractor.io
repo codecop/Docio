@@ -40,13 +40,13 @@ DocsExtractor := Object clone do(
 		outFile remove open
 		sourceFiles foreach(file,
 			file docSlices foreach(d,
-                /* docString := removeWhitespacesAtLineBegginningsOfString(d) */
-				outFile write("doc ", d strip, "\n------\n")
+                docString := removeIndentInDocString(d)
+				outFile write("doc ", docString, "\n------\n")
 			)
 			
 			file metadocSlices foreach(d,
-                /* docString := removeWhitespacesAtLineBegginningsOfString(d) */
-				outFile write("metadoc ", d strip, "\n------\n")
+                docString := removeIndentInDocString(d)
+				outFile write("metadoc ", docString, "\n------\n")
 			)
 		)
 		outFile close
@@ -54,8 +54,21 @@ DocsExtractor := Object clone do(
 
 	sourceFiles := method(cFiles appendSeq(ioFiles))
 
-    removeWhitespacesAtLineBegginningsOfString := method(string,
-        string split("\n") map(lstrip) join("\n")
+    // it's important to understand, that the indent is the indent of the first
+    // line after /*doc line, that is the second line in the string
+    removeIndentInDocString := method(string,
+        lines := string split("\n")
+        firstDocLine := lines at(1)
+        if(firstDocLine,
+            indent := getIndentForString(firstDocLine)
+            lines map(asMutable removePrefix(indent)) join("\n") strip
+            ,
+            string asMutable strip
+        )
+    )
+
+    getIndentForString := method(string,
+        string ?beforeSeq(string ?asMutable ?lstrip)
     )
 
 	cFiles := method(

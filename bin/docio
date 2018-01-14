@@ -1,7 +1,5 @@
 #!/usr/local/bin/io
-
 Docio
 
-/* Directory setCurrentWorkingDirectory(System launchPath) */
 Docio CLI run
 Docio generateDocs
