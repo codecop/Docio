@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>Docio Prototype Reference</title>
+        <meta name="description" content="Docio Reference">
+        <meta name="author" content="Ales Tsurko">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../lib/uikit-3.0.0-beta.35/css/uikit.min.css" />
+        <link rel="stylesheet" href="../lib/prism/prism.css" />
+        <link rel="stylesheet" href="../uikit-docio.css" />
+        <link rel="stylesheet" href="../main.css" />
+        
+    </head>
+
+    <body>
+        <script src="../lib/prism/prism.js"></script>
+        <div class="uk-offcanvas-content">
+            <!-- menu buttons -->
+            <div uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: 200">
+                <nav class="search-bar uk-navbar-container" uk-navbar="dropbar: true; mode: click">
+                    <div class="nav-overlay uk-navbar-left">
+                        <ul class="uk-navbar-nav">
+                            <li>
+                                <a href="#" uk-icon="icon: triangle-down"></a>
+                                <div class="uk-navbar-dropdown" style="overflow-x: auto; overflow-y: hidden; width: 100%">
+                                    <ul class="uk-nav uk-navbar-dropdown-nav uk-flex uk-flex-column uk-flex-wrap uk-height-medium">
+                                        <li class="uk-padding-small uk-padding-remove-vertical"><a href="#CLI" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">CLI</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#DocsExtractor" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">DocsExtractor</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#PageGenerator" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">PageGenerator</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#Parser" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">Parser</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#categories" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">categories</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#copyTemplate(templateDir)" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">copyTemplate(templateDir)</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#extractDocs" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">extractDocs</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#generateDocs" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generateDocs</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#generateSite" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generateSite</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#getDocsTxt" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">getDocsTxt</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#outputPath" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">outputPath</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#packageInfo" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">packageInfo</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#packageName" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">packageName</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#packagePath" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">packagePath</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#printDocFor(query)" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">printDocFor(query)</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#templatePath" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">templatePath</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#contents-menu" uk-icon="icon: list" class="uk-navbar-toggle" uk-toggle="target: #contents-menu"></a>
+                            </li>
+                            <li>
+                                <a href="../index.html" uk-icon="icon: home"></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-overlay uk-navbar-right">
+                        <a class="uk-navbar-toggle" uk-search-icon uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+                    </div>
+                    <!-- hidden search field -->
+                    <div class="nav-overlay uk-navbar-left uk-flex-1" hidden>
+
+                        <div class="uk-navbar-item uk-width-expand">
+                            <form class="uk-search uk-search-navbar uk-width-1-1">
+                                <input class="uk-search-input" type="search" placeholder="Search..." oninput="DocioSearch.setQuery(this.value)" autofocus>
+                            </form>
+                        </div>
+                        <div class="search-results uk-height-medium uk-navbar-dropdown" style="overflow-y: auto; margin: 0" uk-dropdown="boundary: .search-bar; boundary-align: true; pos: bottom-justify; delay-hide: 0"> 
+                            <table class="uk-table uk-table-hover">
+                                <tbody id="search-results-table"></tbody>
+                            </table>
+                        </div>
+
+                        <a class="uk-navbar-toggle" uk-close uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+
+                    </div>
+                </nav>
+            </div>
+            <!-- offscreen-menu -->
+            <div id="contents-menu" uk-offcanvas="mode: reveal">
+                <div class="uk-offcanvas-bar">
+                    <button class="uk-offcanvas-close" type="button" uk-close></button>
+                    <h3>Docio</h3>
+                    <p></p>
+                    <ul class="uk-nav-default" uk-nav="multiple: true;">
+                        <li class="uk-nav-header"><p>API</p></li><li class=""><a href="01_introduction.html">01_Introduction</a></li><li class=""><a href="cli.html">CLI</a></li><li class="uk-active uk-parent"><a href="#">Docio</a><ul class="uk-nav-sub"><li><a href="#CLI" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">CLI</a></li><li><a href="#DocsExtractor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">DocsExtractor</a></li><li><a href="#PageGenerator" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">PageGenerator</a></li><li><a href="#Parser" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">Parser</a></li><li><a href="#categories" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">categories</a></li><li><a href="#copyTemplate(templateDir)" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">copyTemplate(templateDir)</a></li><li><a href="#extractDocs" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">extractDocs</a></li><li><a href="#generateDocs" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generateDocs</a></li><li><a href="#generateSite" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generateSite</a></li><li><a href="#getDocsTxt" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">getDocsTxt</a></li><li><a href="#outputPath" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">outputPath</a></li><li><a href="#packageInfo" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">packageInfo</a></li><li><a href="#packageName" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">packageName</a></li><li><a href="#packagePath" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">packagePath</a></li><li><a href="#printDocFor(query)" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">printDocFor(query)</a></li><li><a href="#templatePath" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">templatePath</a></li></ul></li><li class="uk-parent"><a href="docsparser.html">DocsParser</a><ul class="uk-nav-sub"><li><a href="docsparser.html#docsMap" >docsMap</a></li><li><a href="docsparser.html#parse" >parse</a></li></ul></li><li class="uk-parent"><a href="pagegenerator.html">PageGenerator</a><ul class="uk-nav-sub"><li><a href="pagegenerator.html#generateMainPage" >generateMainPage</a></li><li><a href="pagegenerator.html#generatePrototypesPages" >generatePrototypesPages</a></li><li><a href="pagegenerator.html#generateSite" >generateSite</a></li><li><a href="pagegenerator.html#init" >init</a></li></ul></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- page content -->
+            <div class="uk-section">
+                <div class="uk-container uk-container-small">
+                    <div>
+                        <article class="uk-article">
+                            <h1 class="uk-article-title">Docio</h1>
+                            <p class="uk-text-lead"></p>
+                            <h2 class="uk-h2">Slots</h2>
+                            <dl class="uk-description-list uk-description-list-divider">
+                                <dt><h4 class="uk-h4" id="CLI"><a class="uk-link-reset header-anchor" href="#CLI" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>CLI</a></h4></dt><dd><p><a href="cli.html">CLI</a></p></dd><dt><h4 class="uk-h4" id="DocsExtractor"><a class="uk-link-reset header-anchor" href="#DocsExtractor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>DocsExtractor</a></h4></dt><dd><p><a href="docsextractor.html">DocsExtractor</a></p></dd><dt><h4 class="uk-h4" id="PageGenerator"><a class="uk-link-reset header-anchor" href="#PageGenerator" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>PageGenerator</a></h4></dt><dd><p><a href="pagegenerator.html">PageGenerator</a></p></dd><dt><h4 class="uk-h4" id="Parser"><a class="uk-link-reset header-anchor" href="#Parser" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>Parser</a></h4></dt><dd><p><a href="docsparser.html">DocsParser</a></p></dd><dt><h4 class="uk-h4" id="categories"><a class="uk-link-reset header-anchor" href="#categories" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>categories</a></h4></dt><dd><p><code>DocsParser docsMap</code> sorted by categories.</p></dd><dt><h4 class="uk-h4" id="copyTemplate(templateDir)"><a class="uk-link-reset header-anchor" href="#copyTemplate(templateDir)" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>copyTemplate(templateDir)</a></h4></dt><dd></dd><dt><h4 class="uk-h4" id="extractDocs"><a class="uk-link-reset header-anchor" href="#extractDocs" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>extractDocs</a></h4></dt><dd><p>Generates <code>docs.txt</code> using <a href="docsextractor.html">DocsExtractor</a>.</p></dd><dt><h4 class="uk-h4" id="generateDocs"><a class="uk-link-reset header-anchor" href="#generateDocs" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>generateDocs</a></h4></dt><dd><p>Generates documentation for the package at <code>packagePath</code>.</p></dd><dt><h4 class="uk-h4" id="generateSite"><a class="uk-link-reset header-anchor" href="#generateSite" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>generateSite</a></h4></dt><dd><p>Use this only after you did parsing.</p></dd><dt><h4 class="uk-h4" id="getDocsTxt"><a class="uk-link-reset header-anchor" href="#getDocsTxt" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>getDocsTxt</a></h4></dt><dd></dd><dt><h4 class="uk-h4" id="outputPath"><a class="uk-link-reset header-anchor" href="#outputPath" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>outputPath</a></h4></dt><dd><p>Path to the <code>docs</code> in the destination package's directory.</p></dd><dt><h4 class="uk-h4" id="packageInfo"><a class="uk-link-reset header-anchor" href="#packageInfo" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>packageInfo</a></h4></dt><dd><p>Returns package.json as an instance of Map.</p></dd><dt><h4 class="uk-h4" id="packageName"><a class="uk-link-reset header-anchor" href="#packageName" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>packageName</a></h4></dt><dd></dd><dt><h4 class="uk-h4" id="packagePath"><a class="uk-link-reset header-anchor" href="#packagePath" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>packagePath</a></h4></dt><dd></dd><dt><h4 class="uk-h4" id="printDocFor(query)"><a class="uk-link-reset header-anchor" href="#printDocFor(query)" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>printDocFor(query)</a></h4></dt><dd><p>Prints documentation for given <code>query</code>.</p>
+
+<p>The method will try to extract the documentation from <code>doc</code> comments,
+if the <code>docs/docs.txt</code> wouldn't exist in the package's directory.</p>
+
+<p>Examples of query:
+<code>
+"ProtoName"
+"ProtoName slotName"
+"AddonName ProtoName slotName"
+</code></p></dd><dt><h4 class="uk-h4" id="templatePath"><a class="uk-link-reset header-anchor" href="#templatePath" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>templatePath</a></h4></dt><dd></dd>
+                            </dl>
+                        </article>
+                    </div>
+                </div>
+            </div>
+            <a href="#" uk-totop uk-scroll class="uk-position-bottom-left uk-position-fixed"></a>
+        </div>
+        <script src="../lib/uikit-3.0.0-beta.35/js/uikit.min.js"></script>
+        <script src="../lib/uikit-3.0.0-beta.35/js/uikit-icons.min.js"></script>
+        <script src="../data.js"></script>
+        <script src=../js/search.js></script>
+        <script src="../js/utility.js"></script>
+    </body>
+</html>

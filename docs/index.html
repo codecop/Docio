@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>Docio</title>
+        <meta name="description" content="Docio">
+        <meta name="author" content="Ales Tsurko">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="lib/uikit-3.0.0-beta.35/css/uikit.min.css" />
+        <link rel="stylesheet" href="lib/prism/prism.css" />
+        <link rel="stylesheet" href="uikit-docio.css" />
+        <link rel="stylesheet" href="main.css" />
+        
+    </head>
+
+    <body>
+        <script src="lib/prism/prism.js"></script>
+        <div class="uk-section uk-section-primary uk-preserve-color uk-flex uk-flex-center uk-flex-middle uk-height-viewport">
+            <div class="uk-position-top">
+                <nav class="search-bar uk-light uk-navbar-container uk-navbar-transparent" uk-navbar="dropbar: true">
+                    <div class="nav-overlay uk-navbar-right">
+                        <a class="uk-navbar-toggle" uk-search-icon uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+                    </div>
+
+                    <div class="nav-overlay uk-navbar-left uk-flex-1" hidden>
+
+                        <div class="uk-navbar-item uk-width-expand">
+                            <form class="uk-search uk-search-navbar uk-width-1-1">
+                                <input class="uk-search-input" type="search" placeholder="Search..." oninput="DocioSearch.setQuery(this.value)" autofocus>
+                            </form>
+                        </div>
+                        <div class="search-results uk-height-medium uk-navbar-dropdown" style="overflow-y: auto; margin: 0" uk-dropdown="boundary: .search-bar; boundary-align: true; pos: bottom-justify; delay-hide: 0"> 
+                            <table class="uk-table uk-table-hover">
+                                <tbody id="search-results-table"></tbody>
+                            </table>
+                        </div>
+
+                        <a class="uk-navbar-toggle" uk-close uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+                    </div>
+                </nav>
+            </div>
+            <div class="uk-container uk-light">
+                <a href="#nav" class="uk-link-reset" uk-scroll><h1 class="uk-heading-hero uk-text-center uk-text-middle">DOCIO</h1></a>
+                <p class="uk-text-lead uk-text-center uk-text-bottom">Documentation generator for Eerie packages.</p>
+            </div>
+        </div>
+
+        <!-- navigation map -->
+        <div id="nav" class="uk-section uk-section-secondary">
+            <div class="uk-container uk-container-expand" style="overflow-x: auto; overflow-y: hidden; height: 28.8000000000000007em; will-change: transform">
+                <ul class="uk-nav uk-nav-default uk-flex uk-flex-column uk-flex-wrap uk-height-small">
+                    <li class="uk-nav-header"><p>API</p></li><li class="uk-margin uk-padding-small uk-padding-remove-vertical"><a href="docs/01_introduction.html">01_Introduction</a></li><li class="uk-margin uk-padding-small uk-padding-remove-vertical"><a href="docs/cli.html">CLI</a></li><li class="uk-margin uk-padding-small uk-padding-remove-vertical"><a href="docs/docio.html">Docio</a><ul class="uk-nav-sub"><li><a href="docs/docio.html#CLI">CLI</a></li><li><a href="docs/docio.html#DocsExtractor">DocsExtractor</a></li><li><a href="docs/docio.html#PageGenerator">PageGenerator</a></li><li><a href="docs/docio.html#Parser">Parser</a></li><li><a href="docs/docio.html#categories">categories</a></li><li><a href="docs/docio.html#copyTemplate(templateDir)">copyTemplate(templateDir)</a></li><li><a href="docs/docio.html#extractDocs">extractDocs</a></li><li><a href="docs/docio.html#generateDocs">generateDocs</a></li><li><a href="docs/docio.html#generateSite">generateSite</a></li><li><a href="docs/docio.html#getDocsTxt">getDocsTxt</a></li><li><a href="docs/docio.html#outputPath">outputPath</a></li><li><a href="docs/docio.html#packageInfo">packageInfo</a></li><li><a href="docs/docio.html#packageName">packageName</a></li><li><a href="docs/docio.html#packagePath">packagePath</a></li><li><a href="docs/docio.html#printDocFor(query)">printDocFor(query)</a></li><li><a href="docs/docio.html#templatePath">templatePath</a></li></ul></li><li class="uk-margin uk-padding-small uk-padding-remove-vertical"><a href="docs/docsparser.html">DocsParser</a><ul class="uk-nav-sub"><li><a href="#docsMap">docsMap</a></li><li><a href="#parse">parse</a></li></ul></li><li class="uk-margin uk-padding-small uk-padding-remove-vertical"><a href="docs/pagegenerator.html">PageGenerator</a><ul class="uk-nav-sub"><li><a href="docs/pagegenerator.html#generateMainPage">generateMainPage</a></li><li><a href="docs/pagegenerator.html#generatePrototypesPages">generatePrototypesPages</a></li><li><a href="docs/pagegenerator.html#generateSite">generateSite</a></li><li><a href="docs/pagegenerator.html#init">init</a></li></ul></li>
+                </ul>
+            </div>
+        </div>
+        <script src="lib/uikit-3.0.0-beta.35/js/uikit.min.js"></script>
+        <script src="lib/uikit-3.0.0-beta.35/js/uikit-icons.min.js"></script>
+        <script src="data.js"></script>
+        <script src="js/search.js"></script>
+        <script src="js/utility.js"></script>
+        <script>
+            DocioSearch.urlPrefix = "docs/";
+        </script>
+    </body>
+</html>

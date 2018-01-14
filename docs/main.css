@@ -1,0 +1,9 @@
+.header-anchor-icon { 
+    display: none;
+    width: 25px;
+    margin-left:-25px;
+}
+
+.header-anchor:hover .header-anchor-icon {
+    display: inline-block;
+}

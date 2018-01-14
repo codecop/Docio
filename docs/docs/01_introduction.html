@@ -1,19 +1,19 @@
-#{Directory setCurrentWorkingDirectory(Directory with(Docio templatePath) path); ""}
+
 <!DOCTYPE html>
 
 <html lang="en">
     <head>
         <meta charset="utf-8">
 
-        <title>#{Docio PageGenerator currentPrototypeName} Prototype Reference</title>
-        <meta name="description" content="#{Docio PageGenerator currentPrototypeName} Reference">
-        <meta name="author" content="#{Docio packageInfo at("author")}">
+        <title>01_Introduction Prototype Reference</title>
+        <meta name="description" content="01_Introduction Reference">
+        <meta name="author" content="Ales Tsurko">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../lib/uikit-3.0.0-beta.35/css/uikit.min.css" />
         <link rel="stylesheet" href="../lib/prism/prism.css" />
         <link rel="stylesheet" href="../uikit-docio.css" />
         <link rel="stylesheet" href="../main.css" />
-        #{doFile("prototype_page.io")}
+        
     </head>
 
     <body>
@@ -28,7 +28,7 @@
                                 <a href="#" uk-icon="icon: triangle-down"></a>
                                 <div class="uk-navbar-dropdown" style="overflow-x: auto; overflow-y: hidden; width: 100%">
                                     <ul class="uk-nav uk-navbar-dropdown-nav uk-flex uk-flex-column uk-flex-wrap uk-height-medium">
-                                        #{PrototypePage slotsNavigation}
+                                        
                                     </ul>
                                 </div>
                             </li>
@@ -67,10 +67,10 @@
             <div id="contents-menu" uk-offcanvas="mode: reveal">
                 <div class="uk-offcanvas-bar">
                     <button class="uk-offcanvas-close" type="button" uk-close></button>
-                    <h3>#{Docio PageGenerator currentPrototypeName}</h3>
-                    <p>#{desc := Docio PageGenerator currentPrototype at("description") ?split("\n") ?at(0); if(desc, desc .. "...", "")}</p>
+                    <h3>01_Introduction</h3>
+                    <p><p>Docio is the documentation generator for Eerie — the package manager for Io....</p>
                     <ul class="uk-nav-default" uk-nav="multiple: true;">
-                        #{PrototypePage globalNavigation}
+                        <li class="uk-nav-header"><p>API</p></li><li class="uk-active "><a href="#">01_Introduction</a></li><li class=""><a href="cli.html">CLI</a></li><li class="uk-parent"><a href="docio.html">Docio</a><ul class="uk-nav-sub"><li><a href="docio.html#CLI" >CLI</a></li><li><a href="docio.html#DocsExtractor" >DocsExtractor</a></li><li><a href="docio.html#PageGenerator" >PageGenerator</a></li><li><a href="docio.html#Parser" >Parser</a></li><li><a href="docio.html#categories" >categories</a></li><li><a href="docio.html#copyTemplate(templateDir)" >copyTemplate(templateDir)</a></li><li><a href="docio.html#extractDocs" >extractDocs</a></li><li><a href="docio.html#generateDocs" >generateDocs</a></li><li><a href="docio.html#generateSite" >generateSite</a></li><li><a href="docio.html#getDocsTxt" >getDocsTxt</a></li><li><a href="docio.html#outputPath" >outputPath</a></li><li><a href="docio.html#packageInfo" >packageInfo</a></li><li><a href="docio.html#packageName" >packageName</a></li><li><a href="docio.html#packagePath" >packagePath</a></li><li><a href="docio.html#printDocFor(query)" >printDocFor(query)</a></li><li><a href="docio.html#templatePath" >templatePath</a></li></ul></li><li class="uk-parent"><a href="docsparser.html">DocsParser</a><ul class="uk-nav-sub"><li><a href="docsparser.html#docsMap" >docsMap</a></li><li><a href="docsparser.html#parse" >parse</a></li></ul></li><li class="uk-parent"><a href="pagegenerator.html">PageGenerator</a><ul class="uk-nav-sub"><li><a href="pagegenerator.html#generateMainPage" >generateMainPage</a></li><li><a href="pagegenerator.html#generatePrototypesPages" >generatePrototypesPages</a></li><li><a href="pagegenerator.html#generateSite" >generateSite</a></li><li><a href="pagegenerator.html#init" >init</a></li></ul></li>
                     </ul>
                 </div>
             </div>
@@ -79,11 +79,23 @@
                 <div class="uk-container uk-container-small">
                     <div>
                         <article class="uk-article">
-                            <h1 class="uk-article-title">#{Docio PageGenerator currentPrototypeName}</h1>
-                            <p class="uk-text-lead">#{desc := Docio PageGenerator currentPrototype at("description"); if(desc, desc, "")}</p>
-                            #{if(Docio PageGenerator currentPrototype at("slots") size > 0, "<h2 class=\"uk-h2\">Slots</h2>", "")}
+                            <h1 class="uk-article-title">01_Introduction</h1>
+                            <p class="uk-text-lead"><p>Docio is the documentation generator for Eerie — the package manager for Io.
+That means that it generates documentation from comments in sources of an Eerie's package.</p>
+
+<p>After generation process it provides you with an HTML documentation pack that can be used as a site for
+your project. It's also generates <code>docs.txt</code>, which is used by Docio to print you documentation right
+in the console while you interact with the Io's interpreter.</p>
+
+<p>Docio comes with a default template, based on <a href="http://geuikit.com">uikit</a>. But you can provide
+your own template. And you can mix HTML with Io in such template.</p>
+
+<p>This site is produced by Docio.</p>
+
+<p>Docio's source code is available <a href="https://github.com/AlesTsurko/docio">here</a>.</p></p>
+                            
                             <dl class="uk-description-list uk-description-list-divider">
-                                #{PrototypePage slotsDocs}
+                                
                             </dl>
                         </article>
                     </div>

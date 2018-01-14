@@ -1,0 +1,16 @@
+//metadoc 01_Introduction category Guide
+/*metadoc 01_Introduction description
+Docio is the documentation generator for Eerie — the package manager for Io. 
+That means that it generates documentation from comments in sources of an Eerie's package.
+
+After generation process it provides you with an HTML documentation pack that can be used as a site for
+your project. It's also generates `docs.txt`, which is used by Docio to print you documentation right
+in the console while you interact with the Io's interpreter.
+
+Docio comes with a default template, based on [uikit](http://geuikit.com). But you can provide
+your own template. And you can mix HTML with Io in such template.
+
+This site is produced by Docio.
+
+Docio's source code is available [here](https://github.com/AlesTsurko/docio).
+*/

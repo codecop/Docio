@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>PageGenerator Prototype Reference</title>
+        <meta name="description" content="PageGenerator Reference">
+        <meta name="author" content="Ales Tsurko">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../lib/uikit-3.0.0-beta.35/css/uikit.min.css" />
+        <link rel="stylesheet" href="../lib/prism/prism.css" />
+        <link rel="stylesheet" href="../uikit-docio.css" />
+        <link rel="stylesheet" href="../main.css" />
+        
+    </head>
+
+    <body>
+        <script src="../lib/prism/prism.js"></script>
+        <div class="uk-offcanvas-content">
+            <!-- menu buttons -->
+            <div uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: 200">
+                <nav class="search-bar uk-navbar-container" uk-navbar="dropbar: true; mode: click">
+                    <div class="nav-overlay uk-navbar-left">
+                        <ul class="uk-navbar-nav">
+                            <li>
+                                <a href="#" uk-icon="icon: triangle-down"></a>
+                                <div class="uk-navbar-dropdown" style="overflow-x: auto; overflow-y: hidden; width: 100%">
+                                    <ul class="uk-nav uk-navbar-dropdown-nav uk-flex uk-flex-column uk-flex-wrap uk-height-medium">
+                                        <li class="uk-padding-small uk-padding-remove-vertical"><a href="#generateMainPage" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generateMainPage</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#generatePrototypesPages" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generatePrototypesPages</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#generateSite" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generateSite</a></li><li class="uk-padding-small uk-padding-remove-vertical"><a href="#init" class="header-anchor" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">init</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#contents-menu" uk-icon="icon: list" class="uk-navbar-toggle" uk-toggle="target: #contents-menu"></a>
+                            </li>
+                            <li>
+                                <a href="../index.html" uk-icon="icon: home"></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-overlay uk-navbar-right">
+                        <a class="uk-navbar-toggle" uk-search-icon uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+                    </div>
+                    <!-- hidden search field -->
+                    <div class="nav-overlay uk-navbar-left uk-flex-1" hidden>
+
+                        <div class="uk-navbar-item uk-width-expand">
+                            <form class="uk-search uk-search-navbar uk-width-1-1">
+                                <input class="uk-search-input" type="search" placeholder="Search..." oninput="DocioSearch.setQuery(this.value)" autofocus>
+                            </form>
+                        </div>
+                        <div class="search-results uk-height-medium uk-navbar-dropdown" style="overflow-y: auto; margin: 0" uk-dropdown="boundary: .search-bar; boundary-align: true; pos: bottom-justify; delay-hide: 0"> 
+                            <table class="uk-table uk-table-hover">
+                                <tbody id="search-results-table"></tbody>
+                            </table>
+                        </div>
+
+                        <a class="uk-navbar-toggle" uk-close uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+
+                    </div>
+                </nav>
+            </div>
+            <!-- offscreen-menu -->
+            <div id="contents-menu" uk-offcanvas="mode: reveal">
+                <div class="uk-offcanvas-bar">
+                    <button class="uk-offcanvas-close" type="button" uk-close></button>
+                    <h3>PageGenerator</h3>
+                    <p><p>Generates documentation pages.</p>...</p>
+                    <ul class="uk-nav-default" uk-nav="multiple: true;">
+                        <li class="uk-nav-header"><p>API</p></li><li class=""><a href="01_introduction.html">01_Introduction</a></li><li class=""><a href="cli.html">CLI</a></li><li class="uk-parent"><a href="docio.html">Docio</a><ul class="uk-nav-sub"><li><a href="docio.html#CLI" >CLI</a></li><li><a href="docio.html#DocsExtractor" >DocsExtractor</a></li><li><a href="docio.html#PageGenerator" >PageGenerator</a></li><li><a href="docio.html#Parser" >Parser</a></li><li><a href="docio.html#categories" >categories</a></li><li><a href="docio.html#copyTemplate(templateDir)" >copyTemplate(templateDir)</a></li><li><a href="docio.html#extractDocs" >extractDocs</a></li><li><a href="docio.html#generateDocs" >generateDocs</a></li><li><a href="docio.html#generateSite" >generateSite</a></li><li><a href="docio.html#getDocsTxt" >getDocsTxt</a></li><li><a href="docio.html#outputPath" >outputPath</a></li><li><a href="docio.html#packageInfo" >packageInfo</a></li><li><a href="docio.html#packageName" >packageName</a></li><li><a href="docio.html#packagePath" >packagePath</a></li><li><a href="docio.html#printDocFor(query)" >printDocFor(query)</a></li><li><a href="docio.html#templatePath" >templatePath</a></li></ul></li><li class="uk-parent"><a href="docsparser.html">DocsParser</a><ul class="uk-nav-sub"><li><a href="docsparser.html#docsMap" >docsMap</a></li><li><a href="docsparser.html#parse" >parse</a></li></ul></li><li class="uk-active uk-parent"><a href="#">PageGenerator</a><ul class="uk-nav-sub"><li><a href="#generateMainPage" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generateMainPage</a></li><li><a href="#generatePrototypesPages" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generatePrototypesPages</a></li><li><a href="#generateSite" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">generateSite</a></li><li><a href="#init" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100">init</a></li></ul></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- page content -->
+            <div class="uk-section">
+                <div class="uk-container uk-container-small">
+                    <div>
+                        <article class="uk-article">
+                            <h1 class="uk-article-title">PageGenerator</h1>
+                            <p class="uk-text-lead"><p>Generates documentation pages.</p></p>
+                            <h2 class="uk-h2">Slots</h2>
+                            <dl class="uk-description-list uk-description-list-divider">
+                                <dt><h4 class="uk-h4" id="generateMainPage"><a class="uk-link-reset header-anchor" href="#generateMainPage" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>generateMainPage</a></h4></dt><dd><p>Generates the <code>index.html</code> from the <code>main_template.html</code>.</p></dd><dt><h4 class="uk-h4" id="generatePrototypesPages"><a class="uk-link-reset header-anchor" href="#generatePrototypesPages" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>generatePrototypesPages</a></h4></dt><dd><p>Generates a page for each of the prototype of the given map.
+This method creates a page for each object from the prototype_template.html.</p></dd><dt><h4 class="uk-h4" id="generateSite"><a class="uk-link-reset header-anchor" href="#generateSite" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>generateSite</a></h4></dt><dd></dd><dt><h4 class="uk-h4" id="init"><a class="uk-link-reset header-anchor" href="#init" onclick="updateAddressWithAnchorLink(this)" uk-scroll="offset: 100"><span class="header-anchor-icon" uk-icon="icon: link"></span>init</a></h4></dt><dd></dd>
+                            </dl>
+                        </article>
+                    </div>
+                </div>
+            </div>
+            <a href="#" uk-totop uk-scroll class="uk-position-bottom-left uk-position-fixed"></a>
+        </div>
+        <script src="../lib/uikit-3.0.0-beta.35/js/uikit.min.js"></script>
+        <script src="../lib/uikit-3.0.0-beta.35/js/uikit-icons.min.js"></script>
+        <script src="../data.js"></script>
+        <script src=../js/search.js></script>
+        <script src="../js/utility.js"></script>
+    </body>
+</html>
