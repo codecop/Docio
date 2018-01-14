@@ -220,7 +220,7 @@ Docio := Object clone do(
 
 Docio clone := Docio do(
     //doc Docio Parser [DocsParser](docsparser.html)
-    doRelativeFile("Docio/Parser.io")
+    doRelativeFile("Docio/DocsParser.io")
     doRelativeFile("Docio/CLI.io")
     doRelativeFile("Docio/DocsExtractor.io")
     //doc Docio PageGenerator [PageGenerator](pagegenerator.html)
