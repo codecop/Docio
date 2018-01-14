@@ -7,7 +7,7 @@ After generation process it provides you with an HTML documentation pack that ca
 your project. It's also generates `docs.txt`, which is used by Docio to print you documentation right
 in the console while you interact with the Io's interpreter.
 
-Docio comes with a default template, based on [uikit](http://geuikit.com). But you can provide
+Docio comes with a default template, based on [uikit](http://getuikit.com). But you can provide
 your own template. And you can mix HTML with Io in such template.
 
 This site is produced by Docio.

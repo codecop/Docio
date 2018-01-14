@@ -87,25 +87,18 @@ Docio := Object clone do(
     )
 
     generateCategories := method(
-        //TODO: refactor
-        firstProto := nil
-        firstProtoName := DocsParser docsMap keys sort detect(k, DocsParser docsMap at(k) at("category"))
-
-        catNameMap := Map clone
-        DocsParser docsMap values select(at("category")) foreach(m, 
-            count := catNameMap at(m at("category")) 
-            if(count == nil, count = 0)
-            catNameMap atPut(m at("category"), count + 1)
+        categoriesNames := Docio DocsParser docsMap values map(at("category")) ?unique
+        if(categoriesNames size > 0,
+            sortDocsByCategoriesWithNames(categoriesNames),
+            categories = Map with("API", Docio DocsParser docsMap)
         )
+    )
 
-        maxCount := 0
-        catName := nil
-        catNameMap foreach(name, count,
-            if(count > maxCount, catName = name; maxCount = count)
+    sortDocsByCategoriesWithNames := method(categoriesNames,
+        categoriesNames foreach(name,
+            category := Docio DocsParser docsMap select(n, value, value at("category") == name)
+            categories atPut(name, category)
         )
-
-        if(catName == nil, catName = "Misc")
-        categories atIfAbsentPut(catName asMutable strip, DocsParser docsMap)
     )
 
     writeDocsToJson := method(
