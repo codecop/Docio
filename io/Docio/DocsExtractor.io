@@ -40,13 +40,13 @@ DocsExtractor := Object clone do(
 		outFile remove open
 		sourceFiles foreach(file,
 			file docSlices foreach(d,
-                docString := removeWhitespacesAtLineBegginningsOfString(d)
-				outFile write("doc ", docString strip, "\n------\n")
+                /* docString := removeWhitespacesAtLineBegginningsOfString(d) */
+				outFile write("doc ", d strip, "\n------\n")
 			)
 			
 			file metadocSlices foreach(d,
-                docString := removeWhitespacesAtLineBegginningsOfString(d)
-				outFile write("metadoc ", docString strip, "\n------\n")
+                /* docString := removeWhitespacesAtLineBegginningsOfString(d) */
+				outFile write("metadoc ", d strip, "\n------\n")
 			)
 		)
 		outFile close

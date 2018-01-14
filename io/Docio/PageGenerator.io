@@ -30,12 +30,13 @@ PageGenerator := Object clone do(
         prototypeTemplate open
     )
 
+    //doc PageGenerator generateSite
     generateSite := method(
         generateMainPage()
         generatePrototypesPages()
     )
 
-    //doc PageGenerator generateMainPage Generates the index.html from the main_template.html.
+    //doc PageGenerator generateMainPage Generates the `index.html` from the `main_template.html`.
     generateMainPage := method(
         mainPage := File with(outputPath .. "/index.html") remove open
         mainPage setContents(mainTemplate contents interpolate)
@@ -47,7 +48,7 @@ PageGenerator := Object clone do(
     */
     generatePrototypesPages := method(
         Directory with(outputPath .. "/docs") createIfAbsent
-        Docio prototypes foreach(key, value,
+        Docio DocsParser docsMap foreach(key, value,
             currentPrototypeName = key
             currentPrototype = value
 
