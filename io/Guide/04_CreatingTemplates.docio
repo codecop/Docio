@@ -1,0 +1,13 @@
+//metadoc 04_CreatingTemplates category Guide
+/*metadoc 04_CreatingTemplates description
+You should provide two template files: `main_template.html` and `prototype_template.html`.
+
+The first one is used to generate the main page. The second one is for the documentation pages.
+
+In the HTML files you can use Io code:
+
+<pre><code class="language-io">&lt;h1>#{"Hello"}&lt;/h1>
+</code></pre>
+
+Check out Docio's default template [directory](https://github.com/AlesTsurko/docio/tree/master/template) to get an example.
+*/

@@ -31,6 +31,7 @@ DocioSearch.__searchPrototypes = function() {
 
     DocioSearch.prototypesKeys.forEach(function(element) {
         protoDesc = DocioSearch.docsData[element].description;
+        if(!protoDesc) {return}
 
         var protoKeyMatch = element.match(regex);
         var descMatch = protoDesc.match(regex);

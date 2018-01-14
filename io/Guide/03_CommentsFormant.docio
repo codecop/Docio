@@ -1,0 +1,26 @@
+//metadoc 03_CommentsFormat category Guide
+/*metadoc 03_CommentsFormat description
+Use single- or multiline comments with following keywoard `doc` or `metadoc`.
+
+Firstly add your object to a category. The category can be named any you like.
+
+<pre><code class="language-io">&#47;&#47;metadoc Prototype category API
+</code></pre>
+
+>  Instead of `category` you can use any keywoard — all following this keywoard will be
+>  available in `DocsParser docsMap` and `Docio categories`.
+
+Then add an optional description to the object:
+
+<pre><code class="language-io">&#47;*metadoc Prototype description
+Some desciption.*&#47;
+</code></pre>
+
+Then comment your public API:
+
+<pre><code class="language-io">&#47;&#47;doc Prototype slotName(args) Description</code></pre>
+
+You can use markdown in your comments. It will be parsed to equivalent HTML code during generation.
+
+[Next](04_creatingtemplates.html)
+*/

@@ -1,6 +1,3 @@
-//metadoc CLI category API
-//metadoc CLI description Docio command line interface.
-
 CLI := Object clone do(
     run := method(
         checkNumberOfArguments()

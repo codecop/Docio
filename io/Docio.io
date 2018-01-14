@@ -98,7 +98,7 @@ Docio := Object clone do(
     sortDocsByCategoriesWithNames := method(categoriesNames,
         categoriesNames foreach(name,
             category := Docio DocsParser docsMap select(n, value, value at("category") == name)
-            categories atPut(name, category)
+            categories atPut(name asMutable removePrefix("<p>") removeSuffix("</p>"), category)
         )
     )
 
@@ -221,9 +221,7 @@ Docio := Object clone do(
 Docio clone := Docio do(
     //doc Docio Parser [DocsParser](docsparser.html)
     doRelativeFile("Docio/Parser.io")
-    //doc Docio CLI [CLI](cli.html)
     doRelativeFile("Docio/CLI.io")
-    //doc Docio DocsExtractor [DocsExtractor](docsextractor.html)
     doRelativeFile("Docio/DocsExtractor.io")
     //doc Docio PageGenerator [PageGenerator](pagegenerator.html)
     doRelativeFile("Docio/PageGenerator.io")
