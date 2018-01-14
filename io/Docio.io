@@ -7,7 +7,7 @@ Docio := Object clone do(
     categories   := Map clone
     //doc Docio packagePath 
     packagePath  ::= nil
-    //doc Docio outputPath
+    //doc Docio outputPath Path to the `docs` in the destination package's directory.
     outputPath   := method(packagePath .. "/docs")
     //doc Docio packageInfo Returns package.json as an instance of Map.
     packageInfo  := nil
@@ -123,15 +123,16 @@ Docio := Object clone do(
     )
 
     /*doc Docio printDocFor(query) 
-    Prints documentation for given query.
+    Prints documentation for given `query`.
+
     The method will try to extract the documentation from `doc` comments, 
     if the `docs/docs.txt` wouldn't exist in the package's directory.
 
     Examples of query:
     ```
-        "ProtoName"
-           "ProtoName slotName"
-      "AddonName ProtoName slotName"
+    "ProtoName"
+    "ProtoName slotName"
+    "AddonName ProtoName slotName"
     ```
     */
     printDocFor := method(query,
@@ -220,6 +221,7 @@ Docio := Object clone do(
             docString println
         )
     )
+
 )
 
 Docio clone := Docio do(

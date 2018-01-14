@@ -54,6 +54,18 @@ DocsExtractor := Object clone do(
 
 	sourceFiles := method(cFiles appendSeq(ioFiles))
 
+	cFiles := method(
+		if(folder directoryNamed("source") exists,
+			folder directoryNamed("source") recursiveFilesOfTypes(list("c", "m"))
+		,
+			list()
+		)
+	)
+	
+	ioFiles := method(
+		if(folder directoryNamed("io") exists, folder directoryNamed("io") recursiveFilesOfTypes(list("io", "docio")), list())
+	)
+
     // it's important to understand, that the indent is the indent of the first
     // line after /*doc line, that is the second line in the string
     removeIndentInDocString := method(string,
@@ -71,16 +83,5 @@ DocsExtractor := Object clone do(
         string ?beforeSeq(string ?asMutable ?lstrip)
     )
 
-	cFiles := method(
-		if(folder directoryNamed("source") exists,
-			folder directoryNamed("source") recursiveFilesOfTypes(list("c", "m"))
-		,
-			list()
-		)
-	)
-	
-	ioFiles := method(
-		if(folder directoryNamed("io") exists, folder directoryNamed("io") recursiveFilesOfTypes(list("io")), list())
-	)
 )
 

@@ -11,16 +11,6 @@
   font-weight: bold;
   font-style: normal; }
 @font-face {
-  font-family: 'Open Sans';
-  src: url("fonts/OpenSans-BoldItalic.woff") format("woff");
-  font-weight: bold;
-  font-style: italic; }
-@font-face {
-  font-family: 'Open Sans';
-  src: url("fonts/OpenSans-LightItalic.woff") format("woff");
-  font-weight: 300;
-  font-style: italic; }
-@font-face {
   font-family: 'Glegoo';
   src: url("fonts/Glegoo-Regular.woff") format("woff");
   font-weight: normal;
@@ -30,11 +20,6 @@
   src: url("fonts/FiraMono-Medium.woff") format("woff");
   font-weight: 500;
   font-style: normal; }
-@font-face {
-  font-family: 'Open Sans';
-  src: url("fonts/OpenSans-SemiBoldItalic.woff") format("woff");
-  font-weight: 600;
-  font-style: italic; }
 @font-face {
   font-family: 'Fira Mono';
   src: url("fonts/FiraMono-Regular.woff") format("woff");
@@ -47,28 +32,8 @@
   font-style: italic; }
 @font-face {
   font-family: 'Open Sans';
-  src: url("fonts/OpenSans-Light.woff") format("woff");
-  font-weight: 300;
-  font-style: normal; }
-@font-face {
-  font-family: 'Open Sans';
   src: url("fonts/OpenSans-Regular.woff") format("woff");
   font-weight: normal;
-  font-style: normal; }
-@font-face {
-  font-family: 'Open Sans';
-  src: url("fonts/OpenSans-ExtraBold.woff") format("woff");
-  font-weight: 800;
-  font-style: normal; }
-@font-face {
-  font-family: 'Open Sans';
-  src: url("fonts/OpenSans-ExtraBoldItalic.woff") format("woff");
-  font-weight: 800;
-  font-style: italic; }
-@font-face {
-  font-family: 'Open Sans';
-  src: url("fonts/OpenSans-SemiBold.woff") format("woff");
-  font-weight: 600;
   font-style: normal; }
 /**
  * Prism base code highlighter theme using Sass 
