@@ -89,7 +89,8 @@ Docio := Object clone do(
     generateCategories := method(
         categoriesNames := Docio DocsParser docsMap values map(at("category")) ?unique
         if(categoriesNames size > 0,
-            sortDocsByCategoriesWithNames(categoriesNames),
+            sortDocsByCategoriesWithNames(categoriesNames)
+            ,
             categories = Map with("API", Docio DocsParser docsMap)
         )
     )
