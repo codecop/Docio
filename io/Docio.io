@@ -216,6 +216,36 @@ Docio := Object clone do(
         )
     )
 
+    //doc Docio openDocsForPackageWithName(packageName)
+    openDocsForPackageWithName := method(packageName,
+        if(AddonLoader hasAddonNamed(packageName),
+            prepareDocsForPackageNamed(packageName)
+            ,
+            Exception raise("Can't find a package with name " .. packageName)
+        )
+
+        docsHomePage := File with(self packagePath .. "/docs/index.html")
+        if(docsHomePage exists,
+            openCommand := System getOpenCommandForCurrentPlatform
+            System system(openCommand .. " " .. docsHomePage path)
+            ,
+            Exception raise(docsHomePage path .. " doesn't exist.")
+        )
+    )
+
+)
+
+System do(
+    getOpenCommandForCurrentPlatform := method(
+        (self platform == "Darwin") ifTrue(
+            return "open"
+        )
+        (self platform == "Windows") ifTrue(
+            return ""
+        ) ifFalse(
+            return "xdg-open"
+        )
+    )
 )
 
 Docio clone := Docio do(
