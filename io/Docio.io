@@ -17,7 +17,7 @@ Docio := Object clone do(
     templatePath ::= nil
     
     getDocioPackage := method(
-        return Eerie activeEnv packageNamed("Docio")
+        return Eerie Env named("_base") packageNamed("Docio")
     )
 
     //doc Docio generateDocs Generates documentation for the package at `packagePath`.
