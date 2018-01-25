@@ -3,10 +3,10 @@
   "version":      "0.1",
   "description":  "Documentation generator for Eerie packages.",
   "author":       "Ales Tsurko",
-  "website":      "https://github.com/AlesTsurko/docio",
+  "website":      "https://github.com/tonikasoft/docio",
   "readme":       "README.md",
   "dependencies": {
     "protos":   ["Yajl", "Regex"],
-    "packages": ["https://github.com/AlesTsurko/Markdown.git", "https://github.com/bekkopen/jasmineio.git"]
+    "packages": ["https://github.com/tonikasoft/Markdown.git", "https://github.com/bekkopen/jasmineio.git"]
   }
 }
