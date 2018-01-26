@@ -26,6 +26,8 @@ Use this only after you did parsing.
 ------
 doc Docio getDocsTxt
 ------
+doc Docio openDocsForPackageWithName(packageName)
+------
 doc Docio DocsParser 
 [DocsParser](docsparser.html)
 ------

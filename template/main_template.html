@@ -50,8 +50,9 @@
 
         <!-- navigation map -->
         <div id="nav" class="uk-section uk-section-secondary">
-            <div class="uk-container uk-container-expand" style="overflow-x: auto; overflow-y: hidden; height: #{if(MainPage maxSlotsNumber != 0, MainPage maxSlotsNumber, 1) * 1.8}em; will-change: transform">
-                <ul class="uk-nav uk-nav-default uk-flex uk-flex-column uk-flex-wrap uk-height-small">
+            <!-- <div class="uk-container uk-container-expand" style="overflow-x: auto; overflow-y: hidden; height: #{if(MainPage maxSlotsNumber != 0, MainPage maxSlotsNumber, 1) * 1.8}em; will-change: transform"> -->
+            <div class="uk-container uk-container-expand uk-height-medium" style="overflow-x: auto; overflow-y: hidden; will-change: transform">
+                <ul class="auto-column-list uk-nav uk-nav-default uk-height-medium">
                     #{MainPage globalNavigation}
                 </ul>
             </div>

@@ -7,3 +7,18 @@
 .header-anchor:hover .header-anchor-icon {
     display: inline-block;
 }
+
+.auto-column-list {
+    -webkit-column-fill: auto;
+    -moz-column-fill: auto;
+    column-fill: auto;
+    -webkit-column-width: 250px;
+    -moz-column-width: 250px;
+    column-width: 250px;
+    -webkit-column-gap: 40px; 
+    -moz-column-gap: 40px; 
+    column-gap: 40px; 
+    -webkit-column-fill: balance;
+    -moz-column-fill: balance;
+    column-fill: balance;
+}
