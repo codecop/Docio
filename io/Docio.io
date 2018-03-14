@@ -199,7 +199,6 @@ Docio := Object clone do(
 
     getSlotKeyInMapForQuery := method(map, query,
         slotKey := map ?keys ?detect(asMutable strip containsSeq(query))
-        map keys println
         if(slotKey not or map not, 
             Exception raise("Can't find slot named " .. query)
             ,
