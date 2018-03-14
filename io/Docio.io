@@ -1,5 +1,4 @@
 Eerie
-Regex
 
 //metadoc Docio category API
 Docio := Object clone do(
@@ -199,8 +198,8 @@ Docio := Object clone do(
     )
 
     getSlotKeyInMapForQuery := method(map, query,
-        regex := "\\b".. query .. "(?:(?:\\(.*\\))|\\b)"
-        slotKey := map ?keys ?detect(matchesRegex(regex))
+        slotKey := map ?keys ?detect(asMutable strip containsSeq(query))
+        map keys println
         if(slotKey not or map not, 
             Exception raise("Can't find slot named " .. query)
             ,
