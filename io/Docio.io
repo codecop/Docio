@@ -32,7 +32,7 @@ Docio := Object clone do(
 
     parsePackageJSON := method(
         packageJson := getDestinationPackageJSON()
-        packageInfo = Yajl parseJson(packageJson contents)
+        packageInfo = packageJson contents parseJson
         packageName = packageInfo at("name")
 
         if(packageName == nil,
