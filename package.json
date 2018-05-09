@@ -6,6 +6,6 @@
   "website":      "https://github.com/tonikasoft/docio",
   "readme":       "README.md",
   "dependencies": {
-    "packages": ["https://github.com/tonikasoft/Markdown.git"]
+    "packages": ["https://github.com/IoLanguage/Markdown.git"]
   }
 }
