@@ -115,10 +115,10 @@ Docio := Object clone do(
         PageGenerator generateSite
     )
 
-    /*doc Docio printDocFor(query) 
-    Prints documentation for given `query`.
+    /*doc Docio printDocFor(query)
+    Prints documentation for a given `query`.
 
-    The method will try to extract the documentation from `doc` comments, 
+    The method will try to extract the documentation from the `doc` comments, 
     if the `docs/docs.txt` wouldn't exist in the package's directory.
 
     Examples of query:
@@ -238,8 +238,8 @@ System do(
         (self platform == "Darwin") ifTrue(
             return "open"
         )
-        (self platform == "Windows") ifTrue(
-            return ""
+        ((self platform containsAnyCaseSeq("windows")) or(self platform containsAnyCaseSeq("mingw"))) ifTrue(
+            return "start \"\""
         ) ifFalse(
             return "xdg-open"
         )
