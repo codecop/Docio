@@ -21,6 +21,8 @@ Docio := Object clone do(
 
     //doc Docio generateDocs Generates documentation for the package at `packagePath`.
     generateDocs := method(
+        self packagePath isNil ifTrue(Exception raise("Package path is nil"))
+        Directory with(self outputPath) createIfAbsent
         parsePackageJSON
         copyTemplate(Directory with(templatePath))
         extractDocs
@@ -72,11 +74,14 @@ Docio := Object clone do(
     )
 
     copyFileToDestination := method(file,
-        if(file path pathExtension != "DS_Store" and file name != "main_template.html" and file name != "prototype_template.html" and file path pathExtension != "io",
-            destinationPath := outputPath .. "/" .. file path afterSeq("./")
-            file copyToPath(destinationPath)
-        )
-    )
+            if(file path pathExtension != "DS_Store" 
+                and file name != "main_template.html" 
+                and file name != "prototype_template.html" 
+                and file path pathExtension != "io",
+                destinationPath := outputPath .. "/" .. file path afterSeq("./")
+                file copyToPath(destinationPath)
+              )
+            )
 
     //doc Docio extractDocs Generates `docs.txt` using [DocsExtractor](docsextractor.html).
     extractDocs := method(
@@ -116,10 +121,10 @@ Docio := Object clone do(
     )
 
     /*doc Docio printDocFor(query)
-    Prints documentation for a given `query`.
+    Prints documentation for the given `query`.
 
     The method will try to extract the documentation from the `doc` comments, 
-    if the `docs/docs.txt` wouldn't exist in the package's directory.
+    if the `docs/docs.txt` doesn't exist in the package's directory.
 
     Examples of query:
     ```
@@ -151,14 +156,15 @@ Docio := Object clone do(
 
     prepareDocsForPackageNamed := method(name,
         addon := AddonLoader addonFor(name)
-        setPackagePath(addon addonPath)
+        self setPackagePath(addon addonPath)
+        
         exception := try(
-            getDocsTxt
+            self getDocsTxt
             DocsParser parse
         )
         exception catch (
-            setTemplatePath(getDocioPackage path .. "/template")
-            generateDocs
+            self setTemplatePath(self getDocioPackage path .. "/template")
+            self generateDocs
             DocsParser parse
         )
     )
