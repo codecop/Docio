@@ -224,8 +224,7 @@ Docio := Object clone do(
 
         docsHomePage := File with(self packagePath .. "/docs/index.html")
         if(docsHomePage exists,
-            openCommand := System getOpenCommandForCurrentPlatform
-            System system(openCommand .. " " .. docsHomePage path)
+            OpenUrl open(docsHomePage path)
             ,
             Exception raise(docsHomePage path .. " doesn't exist.")
         )
@@ -233,17 +232,32 @@ Docio := Object clone do(
 
 )
 
-System do(
-    getOpenCommandForCurrentPlatform := method(
-        (self platform == "Darwin") ifTrue(
-            return "open"
-        )
-        ((self platform containsAnyCaseSeq("windows")) or(self platform containsAnyCaseSeq("mingw"))) ifTrue(
-            return "start \"\""
-        ) ifFalse(
-            return "xdg-open"
-        )
+OpenUrl := Object clone
+
+OpenUrl open := method(url,
+    (System platform == "Darwin") ifTrue(
+        self _openDarwin
     )
+    ((System platform containsAnyCaseSeq("windows")) or(System platform containsAnyCaseSeq("mingw"))) ifTrue(
+        self _openWin(url)
+    ) ifFalse(
+        self _openLinux(url)
+    )
+)
+
+OpenUrl _openDarwin := method(url,
+    System system("open #{url}" interpolate)
+)
+
+OpenUrl _openWin := method(url,
+    System system("start \"\"" .. " " .. url)
+)
+
+OpenUrl _openLinux := method(url,
+    System system("""URL=#{url}; xdg-open $URL \
+    || sensible-browser $URL \
+    || x-www-browser $URL \
+    || gnome-open $URL""" interpolate)
 )
 
 Docio clone := Docio do(
