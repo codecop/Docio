@@ -1,6 +1,6 @@
 {
   "name":         "Docio",
-  "version":      "0.1",
+  "version":      "0.1.1",
   "description":  "Documentation generator for Eerie packages.",
   "author":       "Ales Tsurko",
   "website":      "https://github.com/tonikasoft/docio",

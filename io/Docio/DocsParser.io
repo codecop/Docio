@@ -27,7 +27,7 @@ DocsParser := Object clone do(
     parseSlot := method(header, docEntry, protoName,
         slotName := header afterSeq(" ") ?asMutable ?strip ?asSymbol
         if(slotName == nil, writeln("ERROR: " .. header))
-        description := docEntry afterSeq(_lineBreak) markdownToHTML
+        description := docEntry afterSeq(_lineBreak) markdownToHtml
 
         isSlot := docEntry beginsWithSeq("doc")
         if(isSlot, 
