@@ -21,50 +21,48 @@ File do(
 	)
 )
 
-DocsExtractor := Object clone do(
-	init := method(
-		self folder := Directory clone
-		self outFile := File clone
-	)
+DocsExtractor := Object clone do (
+	
+    dir := Directory clone
+
+    outFile := File clone
 
 	setPath := method(path,
-		folder setPath(path) createSubdirectory("docs")
-		outFile setPath(Path with(path, "docs/docs.txt"))
-	)
+		self dir setPath(path) createSubdirectory("docs")
+		self outFile setPath(Path with(path, "docs/docs.txt")))
 
-	clean := method(
-		outFile remove
-	)
+	clean := method(self outFile remove)
 
 	extract := method(
-		outFile remove open
-		sourceFiles foreach(file,
+		self outFile remove open
+
+		self files foreach(file,
 			file docSlices foreach(d,
                 docString := removeIndentInDocString(d)
-				outFile write("doc ", docString, "\n------\n")
-			)
+				self outFile write("doc ", docString, "\n------\n"))
 			
 			file metadocSlices foreach(d,
                 docString := removeIndentInDocString(d)
-				outFile write("metadoc ", docString, "\n------\n")
-			)
-		)
-		outFile close
-	)
+				self outFile write("metadoc ", docString, "\n------\n")))
 
-	sourceFiles := method(cFiles appendSeq(ioFiles))
+		self outFile close)
 
-	cFiles := method(
-		if(folder directoryNamed("source") exists,
-			folder directoryNamed("source") recursiveFilesOfTypes(list("c", "m"))
-		,
-			list()
-		)
-	)
+	files := method(
+        self cFiles appendSeq(self ioFiles) appendSeq(self docioFiles))
+
+    cFiles := method(
+        if (self dir directoryNamed("source") exists not, return list())
+        self dir directoryNamed("source") recursiveFilesOfTypes(list("c", "m")))
 	
 	ioFiles := method(
-		if(folder directoryNamed("io") exists, folder directoryNamed("io") recursiveFilesOfTypes(list("io", "docio")), list())
-	)
+		if (self dir directoryNamed("io") exists not, return list()) 
+        self dir directoryNamed("io") \
+            recursiveFilesOfTypes(list("io", "docio")), list())
+
+    docioFiles := method(
+        if (self dir directoryNamed("docio") exists not, return list()) 
+        self dir directoryNamed("docio") \
+            recursiveFilesOfTypes(list("docio")), list()))
 
     // it's important to understand, that the indent is the indent of the first
     // line after /*doc line, that is the second line in the string
