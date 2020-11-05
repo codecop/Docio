@@ -2,16 +2,23 @@ Eerie
 
 //metadoc Docio category API
 Docio := Object clone do(
+
     //doc Docio categories `DocsParser docsMap` sorted by categories.
     categories   := Map clone
+    
     //doc Docio packagePath 
     packagePath  ::= nil
-    //doc Docio outputPath Path to the `docs` in the destination package's directory.
+    
+    /*doc Docio outputPath 
+    Path to the `docs` in the destination package's directory.*/
     outputPath   := method(packagePath .. "/docs")
+    
     //doc Docio packageInfo Returns package.json as an instance of Map.
     packageInfo  := nil
+    
     //doc Docio packageName 
     packageName  := nil
+    
     //doc Docio templatePath
     templatePath ::= nil
     
@@ -19,7 +26,8 @@ Docio := Object clone do(
         return Eerie Env named("_base") packageNamed("Docio")
     )
 
-    //doc Docio generateDocs Generates documentation for the package at `packagePath`.
+    /*doc Docio generateDocs 
+    Generates documentation for the package at `packagePath`.*/
     generateDocs := method(
         self packagePath isNil ifTrue(Exception raise("Package path is nil"))
         Directory with(self outputPath) createIfAbsent
