@@ -8,7 +8,7 @@ CLI := Object clone do(
     checkNumberOfArguments := method(
         if(System args size < 2,
             showUsage()
-            System exit(0)
+            System exit(1)
         )
     )
 
@@ -31,7 +31,7 @@ CLI := Object clone do(
         Docio setPackagePath(options at("package") ?stringByExpandingTilde)
         if(Docio packagePath == nil,
             showUsage()
-            System exit(0)
+            System exit(1)
         )
     )
 
