@@ -35,7 +35,7 @@ DocsExtractor := Object clone do (
 
 	extract := method(
 		self outFile remove open
-
+        
 		self files foreach(file,
 			file docSlices foreach(d,
                 docString := removeIndentInDocString(d)
