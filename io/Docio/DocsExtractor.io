@@ -51,16 +51,16 @@ DocsExtractor := Object clone do (
         self cFiles appendSeq(self ioFiles) appendSeq(self docioFiles))
 
     cFiles := method(
-        if (self dir directoryNamed("source") exists not, return list())
-        self dir directoryNamed("source") recursiveFilesOfTypes(list("c", "m")))
+        if (self dir directoryNamed("source") exists not, return list(),
+        self dir directoryNamed("source") recursiveFilesOfTypes(list("c", "m"))))
 	
 	ioFiles := method(
-		if (self dir directoryNamed("io") exists not, return list()) 
+		if (self dir directoryNamed("io") exists not, return list(),
         self dir directoryNamed("io") \
-            recursiveFilesOfTypes(list("io", "docio")), list())
+            recursiveFilesOfTypes(list("io", "docio")), list()))
 
     docioFiles := method(
-        if (self dir directoryNamed("docio") exists not, return list()) 
+        if (self dir directoryNamed("docio") exists not, return list(),
         self dir directoryNamed("docio") \
             recursiveFilesOfTypes(list("docio")), list()))
 
