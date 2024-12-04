@@ -55,14 +55,14 @@ DocsExtractor := Object clone do (
         self dir directoryNamed("source") recursiveFilesOfTypes(list("c", "m")))
 	
 	ioFiles := method(
-		if (self dir directoryNamed("io") exists not, return list()) 
+		if (self dir directoryNamed("io") exists not, return list())
         self dir directoryNamed("io") \
-            recursiveFilesOfTypes(list("io", "docio")), list())
+            recursiveFilesOfTypes(list("io", "docio")))
 
     docioFiles := method(
-        if (self dir directoryNamed("docio") exists not, return list()) 
+        if (self dir directoryNamed("docio") exists not, return list())
         self dir directoryNamed("docio") \
-            recursiveFilesOfTypes(list("docio")), list()))
+            recursiveFilesOfTypes(list("docio")))
 
     // it's important to understand, that the indent is the indent of the first
     // line after /*doc line, that is the second line in the string
