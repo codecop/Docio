@@ -7,7 +7,7 @@ Firstly add your object to a category. The category can be named any you like.
 <pre><code class="language-io">&#47;&#47;metadoc Prototype category API
 </code></pre>
 
->  Instead of `category` you can use any keyword — all following this keyword will be
+>  Instead of `category` you can use any keyword - all following this keyword will be
 >  available in `DocsParser docsMap` and `Docio categories`.
 
 Then add an optional description to the object:
