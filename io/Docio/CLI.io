@@ -13,7 +13,7 @@ CLI := Object clone do(
     )
 
     showUsage := method(
-        "Docio - documentation generator for Eerie packages.\nUsage:\n\tdocio package=package_dir [template=path_to_template]" println
+        "Docio - documentation generator for Eerie packages.\nUsage:\n\tdocio --package=package_dir [--template=path_to_template]" println
     )
 
     parseOptions := method(

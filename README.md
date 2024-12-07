@@ -24,7 +24,7 @@ of generated output): http://iolanguage.github.io/docio
 ### CLI
 
 ```
-docio package=/path/to/package [template=/path/to/template]
+docio --package=/path/to/package [--template=/path/to/template]
 ```
 
 This command recursively searches for files with extensions "io", "docio", "c"
