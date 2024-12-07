@@ -3,7 +3,7 @@
 Docio comes with a command line application `docio`, that you can use 
 like this: 
 
-<pre><code class="language-shell">docio package=/path/to/package [template=/path/to/template]
+<pre><code class="language-shell">docio --package=/path/to/package [--template=/path/to/template]
 </code></pre>
 
 After running, it will search recursively for files with extensions "io", "docio",
