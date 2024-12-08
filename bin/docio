@@ -1,4 +1,5 @@
 #!/usr/local/bin/io
-Docio
+
+# Docio parsePackageJSON:
 Docio CLI run
-Docio generateDocs
+# Docio generateDocs
