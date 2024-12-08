@@ -23,7 +23,8 @@ Docio := Object clone do(
     templatePath ::= nil
     
     getDocioPackage := method(
-        return Eerie Env named("_base") packageNamed("Docio")
+        # Eerie Env named("_base") packageNamed("Docio")
+        File thisSourceFile parentDirectory parentDirectory
     )
 
     /*doc Docio generateDocs 
@@ -108,6 +109,7 @@ Docio := Object clone do(
     )
 
     sortDocsByCategoriesWithNames := method(categoriesNames,
+        categoriesNames println
         categoriesNames foreach(name,
             category := Docio DocsParser docsMap select(n, value, value at("category") == name)
             categories atPut(name asMutable removePrefix("<p>") removeSuffix("</p>"), category)
