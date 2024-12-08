@@ -109,10 +109,13 @@ Docio := Object clone do(
     )
 
     sortDocsByCategoriesWithNames := method(categoriesNames,
-        categoriesNames println
         categoriesNames foreach(name,
             category := Docio DocsParser docsMap select(n, value, value at("category") == name)
-            categories atPut(name asMutable removePrefix("<p>") removeSuffix("</p>"), category)
+            if (name,
+                categories atPut(name asMutable removePrefix("<p>") removeSuffix("</p>"), category)
+            ,
+                categories atPut("nil" asMutable removePrefix("<p>") removeSuffix("</p>"), category)
+            )
         )
     )
 
