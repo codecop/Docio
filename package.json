@@ -5,6 +5,7 @@
   "author":       "Ales Tsurko",
   "website":      "https://github.com/tonikasoft/docio",
   "readme":       "README.md",
+  "protos":       ["Docio"],
   "dependencies": {
     "packages": ["https://github.com/IoLanguage/Markdown.git"]
   }
